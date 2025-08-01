@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Filter, Plus, Upload, ArrowLeft, X, CheckCircle, Clock } from 'lucide-react';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard'
+  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard', 'camGeneration'
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
   const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
@@ -119,6 +119,16 @@ function App() {
   const handleBackFromCM = () => {
     setCurrentScreen('dashboard');
   };
+
+  const handleGenerateCAM = () => {
+    setCurrentScreen('camGeneration');
+    
+    // Simulate CAM generation process
+    setTimeout(() => {
+      setCurrentScreen('cmDashboard');
+    }, 5000); // 5 second CAM generation simulation
+  };
+
   // Upload Animation Screen
   if (currentScreen === 'uploading') {
     return (
@@ -155,6 +165,119 @@ function App() {
             <p className="text-gray-600 mb-4">Please wait, documents are uploading...</p>
             <div className="w-64 bg-gray-200 rounded-full h-2 mx-auto">
               <div className="bg-red-600 h-2 rounded-full animate-pulse" style={{ width: '70%' }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // CAM Generation Screen
+  if (currentScreen === 'camGeneration') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header with Logo */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="px-6 py-4">
+            <div className="flex items-center">
+              <div className="flex items-center space-x-2">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
+                  <div className="grid grid-cols-2 gap-1">
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                  </div>
+                </div>
+                <div className="text-red-600 font-bold text-lg">
+                  ADITYA BIRLA<br />
+                  <span className="text-red-700">CAPITAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CAM Generation Content */}
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6">
+          <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg p-8">
+            {/* Header */}
+            <div className="flex items-center space-x-4 mb-8">
+              <div className="w-16 h-16 bg-red-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">ABC</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Automated Credit Assessment Memo Solution</h1>
+                <p className="text-gray-600">Fully automated Agentic AI + Gen AI based CAM ++ Generation Solution</p>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-8">
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="bg-red-600 h-3 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+              </div>
+              <div className="text-center mt-4">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">100% Complete</h2>
+                <p className="text-green-600 font-medium">Complete CAM generated successfully!</p>
+              </div>
+            </div>
+
+            {/* Success Icon */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-green-600 mb-2">CAM Generation Complete!</h3>
+              <p className="text-gray-600">Redirecting to CAM Composer...</p>
+            </div>
+
+            {/* Process Steps */}
+            <div className="grid grid-cols-4 gap-6 mb-8">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">Reading Documents</h4>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">Building Basic CAM</h4>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">Financial Plotting</h4>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">Generating CAM Report</h4>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="text-center text-gray-600 text-sm">
+              <p>Takes input from Bank Statements, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats</p>
+            </div>
+
+            {/* Processing Status */}
+            <div className="text-right mt-6">
+              <p className="text-gray-500 text-sm">Processing... Please wait</p>
             </div>
           </div>
         </div>
@@ -242,7 +365,7 @@ function App() {
                   <td className="px-6 py-4 text-sm text-gray-900">Received New Application</td>
                   <td className="px-6 py-4">
                     <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium">
-                      Generate CAM
+                      <span onClick={handleGenerateCAM}>Generate CAM</span>
                     </button>
                   </td>
                 </tr>
