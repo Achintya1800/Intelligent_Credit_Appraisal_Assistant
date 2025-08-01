@@ -105,7 +105,7 @@ function App() {
     setApplications(prev => 
       prev.map(app => 
         app.applicant === 'Vishnu Packwell Pvt Ltd' 
-          ? { ...app, status: 'Verified' }
+          ? { ...app, status: 'Verified', progress: 100 }
           : app
       )
     );
