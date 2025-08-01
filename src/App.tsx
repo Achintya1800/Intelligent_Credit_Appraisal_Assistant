@@ -5,6 +5,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading'
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
+  const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
   const [applications, setApplications] = useState([
     {
       id: 'APP001',
@@ -80,7 +81,7 @@ function App() {
           applicant: 'Vishnu Packwell Pvt Ltd',
           amount: '₹35,00,000',
           program: 'Term Loan',
-          status: 'New',
+          status: isDocumentsApproved ? 'Verified Documents' : 'New',
           progress: 0
         };
         
@@ -96,6 +97,18 @@ function App() {
   };
 
   const closeVerifyPopup = () => {
+    setShowVerifyPopup(false);
+  };
+
+  const handleApproveDocuments = () => {
+    setIsDocumentsApproved(true);
+    setApplications(prev => 
+      prev.map(app => 
+        app.applicant === 'Vishnu Packwell Pvt Ltd' 
+          ? { ...app, status: 'Verified Documents' }
+          : app
+      )
+    );
     setShowVerifyPopup(false);
   };
 
@@ -353,12 +366,18 @@ function App() {
                   </td>
                   <td className="px-6 py-4">
                     {app.applicant === 'Vishnu Packwell Pvt Ltd' ? (
-                      <button 
-                        onClick={handleVerifyDocuments}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
-                      >
-                        Verify Documents
-                      </button>
+                      isDocumentsApproved ? (
+                        <button className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium">
+                          Send to CM Queue
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={handleVerifyDocuments}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
+                        >
+                          Verify Documents
+                        </button>
+                      )
                     ) : (
                       <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
                     )}
@@ -433,10 +452,8 @@ function App() {
                   Close
                 </button>
                 <button className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium">
+                  onClick={handleApproveDocuments}
                   Approve Documents
-                </button>
-                <button className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium">
-                  Start Processing
                 </button>
               </div>
             </div>
