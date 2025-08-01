@@ -127,25 +127,72 @@ function App() {
     setCamProgress(0);
     setCompletedSteps([]);
     
-    // Simulate progressive CAM generation process
-    const progressSteps = [
-      { progress: 25, step: 0, delay: 3000 }, // Reading Documents - 3 seconds
-      { progress: 50, step: 1, delay: 6000 }, // Building Basic CAM - 6 seconds
-      { progress: 75, step: 2, delay: 9000 }, // Financial Plotting - 9 seconds
-      { progress: 100, step: 3, delay: 12000 }, // Generating CAM Report - 12 seconds
-    ];
-
-    progressSteps.forEach(({ progress, step, delay }) => {
-      setTimeout(() => {
-        setCamProgress(progress);
-        setCompletedSteps(prev => [...prev, step]);
-      }, delay);
-    });
+    // Smooth progressive loading with different messages
+    let currentProgress = 0;
+    
+    // Step 1: Reading Documents (0% to 44%)
+    const step1Interval = setInterval(() => {
+      currentProgress += 2;
+      setCamProgress(currentProgress);
+      if (currentProgress >= 44) {
+        clearInterval(step1Interval);
+        setCompletedSteps([0]);
+        
+        // Step 2: Building Basic CAM (44% to 58%)
+        const step2Interval = setInterval(() => {
+          currentProgress += 1;
+          setCamProgress(currentProgress);
+          if (currentProgress >= 58) {
+            clearInterval(step2Interval);
+            setCompletedSteps([0, 1]);
+            
+            // Step 3: Financial Plotting (58% to 87%)
+            const step3Interval = setInterval(() => {
+              currentProgress += 1;
+              setCamProgress(currentProgress);
+              if (currentProgress >= 87) {
+                clearInterval(step3Interval);
+                setCompletedSteps([0, 1, 2]);
+                
+                // Step 4: Generating CAM Report (87% to 100%)
+                const step4Interval = setInterval(() => {
+                  currentProgress += 1;
+                  setCamProgress(currentProgress);
+                  if (currentProgress >= 100) {
+                    clearInterval(step4Interval);
+                    setCompletedSteps([0, 1, 2, 3]);
+                  }
+                }, 100);
+              }
+            }, 150);
+          }
+        }, 200);
+      }
+    }, 100);
 
     // Return to CM Dashboard after completion
     setTimeout(() => {
       setCurrentScreen('cmDashboard');
-    }, 15000); // 15 seconds total
+    }, 18000); // 18 seconds total
+  };
+
+  // Get current status message based on progress
+  const getCurrentStatusMessage = () => {
+    if (camProgress < 22) return "Starting analysis...";
+    if (camProgress < 44) return "Documents collected successfully!";
+    if (camProgress < 58) return "Data fetched and processed!";
+    if (camProgress < 87) return "Financial analysis completed!";
+    if (camProgress < 100) return "Generating CAM... Please wait";
+    return "Complete CAM generated successfully!";
+  };
+
+  const getStatusMessageColor = () => {
+    if (camProgress < 22) return "text-blue-600";
+    if (camProgress < 44) return "text-green-600";
+    if (camProgress < 58) return "text-green-600";
+    if (camProgress < 87) return "text-green-600";
+    if (camProgress < 100) return "text-blue-600";
+    return "text-green-600";
   };
 
   // Upload Animation Screen
@@ -235,17 +282,15 @@ function App() {
             <div className="mb-12">
               <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
                 <div 
-                  className="bg-gradient-to-r from-red-500 to-red-600 h-4 rounded-full transition-all duration-2000 ease-out shadow-sm" 
+                  className="bg-gradient-to-r from-red-500 to-red-600 h-4 rounded-full transition-all duration-300 ease-out shadow-sm" 
                   style={{ width: `${camProgress}%` }}
                 ></div>
               </div>
               <div className="text-center mt-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-3">{camProgress}% Complete</h2>
-                {camProgress === 100 ? (
-                  <p className="text-green-600 font-semibold text-lg">Complete CAM generated successfully!</p>
-                ) : (
-                  <p className="text-blue-600 font-semibold text-lg animate-pulse">Generating CAM... Please wait</p>
-                )}
+                <p className={`font-semibold text-lg ${getStatusMessageColor()}`}>
+                  {getCurrentStatusMessage()}
+                </p>
               </div>
             </div>
 
@@ -269,14 +314,14 @@ function App() {
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
                     completedSteps.includes(index) 
                       ? 'bg-gradient-to-br from-green-500 to-green-600 shadow-lg' 
-                      : 'bg-gray-300 animate-pulse'
+                      : 'bg-gray-300'
                   }`}>
                     {completedSteps.includes(index) ? (
                       <svg className="w-6 h-6 text-white animate-scale-in" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
+                      <span className="text-gray-600 font-bold text-sm">{index + 1}</span>
                     )}
                   </div>
                   <h4 className={`font-bold mb-2 transition-colors duration-500 text-sm ${
