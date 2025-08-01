@@ -81,7 +81,7 @@ function App() {
           applicant: 'Vishnu Packwell Pvt Ltd',
           amount: '₹35,00,000',
           program: 'Term Loan',
-          status: isDocumentsApproved ? 'Verified Documents' : 'New',
+          status: isDocumentsApproved ? 'Verified' : 'New',
           progress: 0
         };
         
@@ -105,7 +105,7 @@ function App() {
     setApplications(prev => 
       prev.map(app => 
         app.applicant === 'Vishnu Packwell Pvt Ltd' 
-          ? { ...app, status: 'Verified Documents' }
+          ? { ...app, status: 'Verified' }
           : app
       )
     );
@@ -376,7 +376,7 @@ function App() {
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
                         >
                           Verify Documents
-                        </button>
+                        CM Queue
                       )
                     ) : (
                       <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
