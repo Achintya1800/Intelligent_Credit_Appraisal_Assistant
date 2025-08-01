@@ -129,10 +129,10 @@ function App() {
     
     // Simulate progressive CAM generation process
     const progressSteps = [
-      { progress: 25, step: 0, delay: 1000 }, // Reading Documents
-      { progress: 50, step: 1, delay: 2000 }, // Building Basic CAM
-      { progress: 75, step: 2, delay: 3000 }, // Financial Plotting
-      { progress: 100, step: 3, delay: 4000 }, // Generating CAM Report
+      { progress: 25, step: 0, delay: 3000 }, // Reading Documents - 3 seconds
+      { progress: 50, step: 1, delay: 6000 }, // Building Basic CAM - 6 seconds
+      { progress: 75, step: 2, delay: 9000 }, // Financial Plotting - 9 seconds
+      { progress: 100, step: 3, delay: 12000 }, // Generating CAM Report - 12 seconds
     ];
 
     progressSteps.forEach(({ progress, step, delay }) => {
@@ -145,7 +145,7 @@ function App() {
     // Return to CM Dashboard after completion
     setTimeout(() => {
       setCurrentScreen('cmDashboard');
-    }, 6000);
+    }, 15000); // 15 seconds total
   };
 
   // Upload Animation Screen
@@ -218,68 +218,68 @@ function App() {
         </div>
 
         {/* CAM Generation Content */}
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6">
-          <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg p-8">
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="max-w-5xl w-full bg-white rounded-2xl shadow-2xl p-12 border border-gray-100">
             {/* Header */}
-            <div className="flex items-center space-x-4 mb-8">
-              <div className="w-16 h-16 bg-red-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">ABC</span>
+            <div className="flex items-center space-x-6 mb-12">
+              <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-2xl">ABC</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Automated Credit Assessment Memo Solution</h1>
-                <p className="text-gray-600">Fully automated Agentic AI + Gen AI based CAM ++ Generation Solution</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Automated Credit Assessment Memo Solution</h1>
+                <p className="text-lg text-gray-600">Fully automated Agentic AI + Gen AI based CAM ++ Generation Solution</p>
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="mb-8">
-              <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="mb-12">
+              <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
                 <div 
-                  className="bg-red-600 h-3 rounded-full transition-all duration-1000 ease-out" 
+                  className="bg-gradient-to-r from-red-500 to-red-600 h-4 rounded-full transition-all duration-2000 ease-out shadow-sm" 
                   style={{ width: `${camProgress}%` }}
                 ></div>
               </div>
-              <div className="text-center mt-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">{camProgress}% Complete</h2>
+              <div className="text-center mt-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">{camProgress}% Complete</h2>
                 {camProgress === 100 ? (
-                  <p className="text-green-600 font-medium">Complete CAM generated successfully!</p>
+                  <p className="text-green-600 font-semibold text-lg">Complete CAM generated successfully!</p>
                 ) : (
-                  <p className="text-blue-600 font-medium">Generating CAM... Please wait</p>
+                  <p className="text-blue-600 font-semibold text-lg animate-pulse">Generating CAM... Please wait</p>
                 )}
               </div>
             </div>
 
             {/* Success Icon - Only show when complete */}
             {camProgress === 100 && (
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="text-center mb-12 animate-fade-in">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg animate-bounce">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-green-600 mb-2">CAM Generation Complete!</h3>
-                <p className="text-gray-600">Redirecting to CAM Composer...</p>
+                <h3 className="text-3xl font-bold text-green-600 mb-3">CAM Generation Complete!</h3>
+                <p className="text-gray-600 text-lg">Redirecting to CAM Composer...</p>
               </div>
             )}
 
             {/* Process Steps */}
-            <div className="grid grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-4 gap-8 mb-12">
               {['Reading Documents', 'Building Basic CAM', 'Financial Plotting', 'Generating CAM Report'].map((step, index) => (
-                <div key={index} className="text-center">
+                <div key={index} className="text-center transform transition-all duration-500 hover:scale-105">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
                     completedSteps.includes(index) 
-                      ? 'bg-green-600' 
-                      : 'bg-gray-300'
+                      ? 'bg-gradient-to-br from-green-500 to-green-600 shadow-lg' 
+                      : 'bg-gray-300 animate-pulse'
                   }`}>
                     {completedSteps.includes(index) ? (
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6 text-white animate-scale-in" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                      <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
                     )}
                   </div>
-                  <h4 className={`font-semibold mb-1 transition-colors duration-500 ${
+                  <h4 className={`font-bold mb-2 transition-colors duration-500 text-sm ${
                     completedSteps.includes(index) ? 'text-green-600' : 'text-gray-500'
                   }`}>{step}</h4>
                 </div>
@@ -287,12 +287,12 @@ function App() {
             </div>
 
             {/* Description */}
-            <div className="text-center text-gray-600 text-sm">
-              <p>Takes input from Bank Statements, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats</p>
+            <div className="text-center text-gray-600 text-base bg-gray-50 rounded-lg p-6">
+              <p className="leading-relaxed">Takes input from Bank Statements, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats</p>
             </div>
 
             {/* Processing Status */}
-            <div className="text-right mt-6">
+            <div className="text-right mt-8">
               <p className="text-gray-500 text-sm">
                 {camProgress === 100 ? 'Processing complete!' : 'Processing... Please wait'}
               </p>
