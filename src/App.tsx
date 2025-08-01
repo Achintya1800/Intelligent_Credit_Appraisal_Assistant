@@ -6,6 +6,8 @@ function App() {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
   const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
+  const [camProgress, setCamProgress] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [applications, setApplications] = useState([
     {
       id: 'APP001',
@@ -122,11 +124,28 @@ function App() {
 
   const handleGenerateCAM = () => {
     setCurrentScreen('camGeneration');
+    setCamProgress(0);
+    setCompletedSteps([]);
     
-    // Simulate CAM generation process
+    // Simulate progressive CAM generation process
+    const progressSteps = [
+      { progress: 25, step: 0, delay: 1000 }, // Reading Documents
+      { progress: 50, step: 1, delay: 2000 }, // Building Basic CAM
+      { progress: 75, step: 2, delay: 3000 }, // Financial Plotting
+      { progress: 100, step: 3, delay: 4000 }, // Generating CAM Report
+    ];
+
+    progressSteps.forEach(({ progress, step, delay }) => {
+      setTimeout(() => {
+        setCamProgress(progress);
+        setCompletedSteps(prev => [...prev, step]);
+      }, delay);
+    });
+
+    // Return to CM Dashboard after completion
     setTimeout(() => {
       setCurrentScreen('cmDashboard');
-    }, 5000); // 5 second CAM generation simulation
+    }, 6000);
   };
 
   // Upload Animation Screen
@@ -215,59 +234,56 @@ function App() {
             {/* Progress Bar */}
             <div className="mb-8">
               <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-red-600 h-3 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+                <div 
+                  className="bg-red-600 h-3 rounded-full transition-all duration-1000 ease-out" 
+                  style={{ width: `${camProgress}%` }}
+                ></div>
               </div>
               <div className="text-center mt-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">100% Complete</h2>
-                <p className="text-green-600 font-medium">Complete CAM generated successfully!</p>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">{camProgress}% Complete</h2>
+                {camProgress === 100 ? (
+                  <p className="text-green-600 font-medium">Complete CAM generated successfully!</p>
+                ) : (
+                  <p className="text-blue-600 font-medium">Generating CAM... Please wait</p>
+                )}
               </div>
             </div>
 
-            {/* Success Icon */}
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+            {/* Success Icon - Only show when complete */}
+            {camProgress === 100 && (
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-green-600 mb-2">CAM Generation Complete!</h3>
+                <p className="text-gray-600">Redirecting to CAM Composer...</p>
               </div>
-              <h3 className="text-2xl font-bold text-green-600 mb-2">CAM Generation Complete!</h3>
-              <p className="text-gray-600">Redirecting to CAM Composer...</p>
-            </div>
+            )}
 
             {/* Process Steps */}
             <div className="grid grid-cols-4 gap-6 mb-8">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+              {['Reading Documents', 'Building Basic CAM', 'Financial Plotting', 'Generating CAM Report'].map((step, index) => (
+                <div key={index} className="text-center">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
+                    completedSteps.includes(index) 
+                      ? 'bg-green-600' 
+                      : 'bg-gray-300'
+                  }`}>
+                    {completedSteps.includes(index) ? (
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                    )}
+                  </div>
+                  <h4 className={`font-semibold mb-1 transition-colors duration-500 ${
+                    completedSteps.includes(index) ? 'text-green-600' : 'text-gray-500'
+                  }`}>{step}</h4>
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-1">Reading Documents</h4>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1">Building Basic CAM</h4>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1">Financial Plotting</h4>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1">Generating CAM Report</h4>
-              </div>
+              ))}
             </div>
 
             {/* Description */}
@@ -277,7 +293,9 @@ function App() {
 
             {/* Processing Status */}
             <div className="text-right mt-6">
-              <p className="text-gray-500 text-sm">Processing... Please wait</p>
+              <p className="text-gray-500 text-sm">
+                {camProgress === 100 ? 'Processing complete!' : 'Processing... Please wait'}
+              </p>
             </div>
           </div>
         </div>
