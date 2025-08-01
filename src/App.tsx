@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Search, Filter, Plus, Upload, ArrowLeft, X, CheckCircle, Clock } from 'lucide-react';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard'
+  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard', 'camGeneration'
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
   const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
+  const [camProgress, setCamProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [stepStatus, setStepStatus] = useState('Starting analysis...');
   const [applications, setApplications] = useState([
     {
       id: 'APP001',
@@ -119,6 +122,47 @@ function App() {
   const handleBackFromCM = () => {
     setCurrentScreen('dashboard');
   };
+
+  const handleGenerateCAM = () => {
+    setCurrentScreen('camGeneration');
+    setCamProgress(0);
+    setCurrentStep(1);
+    setStepStatus('Starting analysis...');
+    
+    // Simulate CAM generation process
+    const steps = [
+      { step: 1, progress: 19, status: 'Starting analysis...', duration: 2000 },
+      { step: 2, progress: 60, status: 'Data fetched and processed!', duration: 3000 },
+      { step: 3, progress: 74, status: 'Data fetched and processed!', duration: 2500 },
+      { step: 4, progress: 91, status: 'Financial analysis completed!', duration: 2000 }
+    ];
+    
+    let currentStepIndex = 0;
+    
+    const processStep = () => {
+      if (currentStepIndex < steps.length) {
+        const step = steps[currentStepIndex];
+        setCamProgress(step.progress);
+        setCurrentStep(step.step);
+        setStepStatus(step.status);
+        
+        setTimeout(() => {
+          currentStepIndex++;
+          if (currentStepIndex < steps.length) {
+            processStep();
+          } else {
+            // CAM generation complete
+            setTimeout(() => {
+              setCurrentScreen('cmDashboard');
+            }, 1500);
+          }
+        }, step.duration);
+      }
+    };
+    
+    processStep();
+  };
+
   // Upload Animation Screen
   if (currentScreen === 'uploading') {
     return (
