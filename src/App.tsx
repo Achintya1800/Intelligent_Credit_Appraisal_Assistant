@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Filter, Plus, Upload, ArrowLeft, X, CheckCircle, Clock } from 'lucide-react';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading'
+  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard'
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
   const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
@@ -112,6 +112,13 @@ function App() {
     setShowVerifyPopup(false);
   };
 
+  const handleCMQueue = () => {
+    setCurrentScreen('cmDashboard');
+  };
+
+  const handleBackFromCM = () => {
+    setCurrentScreen('dashboard');
+  };
   // Upload Animation Screen
   if (currentScreen === 'uploading') {
     return (
@@ -151,6 +158,128 @@ function App() {
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  // CM Dashboard Screen
+  if (currentScreen === 'cmDashboard') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header with Logo */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="px-6 py-4">
+            <div className="flex items-center">
+              <div className="flex items-center space-x-2">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
+                  <div className="grid grid-cols-2 gap-1">
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                  </div>
+                </div>
+                <div className="text-red-600 font-bold text-lg">
+                  ADITYA BIRLA<br />
+                  <span className="text-red-700">CAPITAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="px-6 py-6">
+          {/* Dashboard Header */}
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-red-600 mb-2">CM Dashboard</h1>
+              <p className="text-gray-500">Review and process credit applications</p>
+            </div>
+          </div>
+
+          {/* Search and Filter */}
+          <div className="mb-6">
+            <div className="flex items-center space-x-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search Applications....."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                />
+              </div>
+              <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                <Filter size={16} />
+                <span>Filter</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Applications Table */}
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Application ID</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Applicant</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Amount</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Program</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Status</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">APP005</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">Vishnu Packwell Pvt Ltd</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">₹35,00,000</td>
+                  <td className="px-6 py-4">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      Term Loan
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">Received New Application</td>
+                  <td className="px-6 py-4">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium">
+                      Generate CAM
+                    </button>
+                  </td>
+                </tr>
+                {applications.slice(0, 4).map((app) => (
+                  <tr key={app.id}>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{app.id}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{app.applicant}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{app.amount}</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        {app.program}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
+                    <td className="px-6 py-4">
+                      <button 
+                        onClick={() => setShowVerifyPopup(true)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Back Button - Bottom Left */}
+        <button
+          onClick={handleBackFromCM}
+          className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
+        >
+          <ArrowLeft size={16} />
+          <span>Back</span>
+        </button>
       </div>
     );
   }
@@ -372,10 +501,11 @@ function App() {
                         </button>
                       ) : (
                         <button 
+                          onClick={handleCMQueue}
                           onClick={handleVerifyDocuments}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
                         >
-                          Verify Documents
+                          CM Queue
                         </button>
                       )
                     ) : (
