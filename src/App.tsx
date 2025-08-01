@@ -247,7 +247,7 @@ function App() {
           {/* Back Button - Bottom Left */}
           <button
             onClick={handleBackToDashboard}
-            className="absolute bottom-6 left-6 flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700"
+            className="absolute bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800"
           >
             <ArrowLeft size={16} />
             <span>Back</span>
