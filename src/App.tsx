@@ -81,7 +81,7 @@ function App() {
           applicant: 'Vishnu Packwell Pvt Ltd',
           amount: '₹35,00,000',
           program: 'Term Loan',
-          status: isDocumentsApproved ? 'Verified Documents' : 'New',
+          status: isDocumentsApproved ? 'Verified' : 'New',
           progress: 0
         };
         
