@@ -81,7 +81,7 @@ function App() {
           applicant: 'Vishnu Packwell Pvt Ltd',
           amount: '₹35,00,000',
           program: 'Term Loan',
-          status: isDocumentsApproved ? 'Verified' : 'New',
+          status: isDocumentsApproved ? 'Verified Documents' : 'New',
           progress: 0
         };
         
@@ -376,7 +376,7 @@ function App() {
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
                         >
                           Verify Documents
-                        CM Queue
+                        </button>
                       )
                     ) : (
                       <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
@@ -461,8 +461,10 @@ function App() {
                 >
                   Close
                 </button>
-                <button className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium">
+                <button 
                   onClick={handleApproveDocuments}
+                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
+                >
                   Approve Documents
                 </button>
               </div>
