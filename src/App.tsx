@@ -389,7 +389,7 @@ function App() {
                       {selectedFiles.length} file(s) selected
                     </p>
                     <button
-                      onClick={handleUpload}
+                      onClick={handleGenerateCAM}
                       className="mt-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md"
                     >
                       Upload
