@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Search, Filter, Plus, Upload, ArrowLeft, X, CheckCircle, Clock } from 'lucide-react';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard', 'camGeneration'
+  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard', 'camGeneration', 'creditApproval'
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
   const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
+  const [camProgress, setCamProgress] = useState(0);
+  const [showEmailNotification, setShowEmailNotification] = useState(false);
   const [applications, setApplications] = useState([
     {
       id: 'APP001',
@@ -122,11 +124,31 @@ function App() {
 
   const handleGenerateCAM = () => {
     setCurrentScreen('camGeneration');
+    setCamProgress(0);
     
-    // Simulate CAM generation process
-    setTimeout(() => {
-      setCurrentScreen('cmDashboard');
-    }, 5000); // 5 second CAM generation simulation
+    // Simulate progressive CAM generation
+    const progressSteps = [
+      { progress: 25, delay: 1000 },
+      { progress: 50, delay: 2000 },
+      { progress: 75, delay: 3000 },
+      { progress: 100, delay: 4000 }
+    ];
+
+    progressSteps.forEach(({ progress, delay }) => {
+      setTimeout(() => {
+        setCamProgress(progress);
+        if (progress === 100) {
+          setTimeout(() => {
+            setCurrentScreen('creditApproval');
+            setShowEmailNotification(true);
+            // Hide email notification after 5 seconds
+            setTimeout(() => {
+              setShowEmailNotification(false);
+            }, 5000);
+          }, 1000);
+        }
+      }, delay);
+    });
   };
 
   // Upload Animation Screen
@@ -215,56 +237,89 @@ function App() {
             {/* Progress Bar */}
             <div className="mb-8">
               <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-red-600 h-3 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+                <div 
+                  className="bg-red-600 h-3 rounded-full transition-all duration-1000 ease-out" 
+                  style={{ width: `${camProgress}%` }}
+                ></div>
               </div>
               <div className="text-center mt-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">100% Complete</h2>
-                <p className="text-green-600 font-medium">Complete CAM generated successfully!</p>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">{camProgress}% Complete</h2>
+                {camProgress === 100 ? (
+                  <p className="text-green-600 font-medium">Complete CAM generated successfully!</p>
+                ) : (
+                  <p className="text-blue-600 font-medium">Generating CAM...</p>
+                )}
               </div>
             </div>
 
-            {/* Success Icon */}
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+            {/* Success Icon - Only show when complete */}
+            {camProgress === 100 && (
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-green-600 mb-2">CAM Generation Complete!</h3>
+                <p className="text-gray-600">Redirecting to Credit Approval Dashboard...</p>
               </div>
-              <h3 className="text-2xl font-bold text-green-600 mb-2">CAM Generation Complete!</h3>
-              <p className="text-gray-600">Redirecting to CAM Composer...</p>
-            </div>
+            )}
 
             {/* Process Steps */}
             <div className="grid grid-cols-4 gap-6 mb-8">
               <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
+                  camProgress >= 25 ? 'bg-green-600' : 'bg-gray-300'
+                }`}>
+                  {camProgress >= 25 ? (
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                  )}
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-1">Reading Documents</h4>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
+                  camProgress >= 50 ? 'bg-green-600' : 'bg-gray-300'
+                }`}>
+                  {camProgress >= 50 ? (
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                  )}
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-1">Building Basic CAM</h4>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
+                  camProgress >= 75 ? 'bg-green-600' : 'bg-gray-300'
+                }`}>
+                  {camProgress >= 75 ? (
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                  )}
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-1">Financial Plotting</h4>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
+                  camProgress >= 100 ? 'bg-green-600' : 'bg-gray-300'
+                }`}>
+                  {camProgress >= 100 ? (
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                  )}
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-1">Generating CAM Report</h4>
               </div>
@@ -277,7 +332,266 @@ function App() {
 
             {/* Processing Status */}
             <div className="text-right mt-6">
-              <p className="text-gray-500 text-sm">Processing... Please wait</p>
+              <p className="text-gray-500 text-sm">
+                {camProgress < 100 ? 'Processing... Please wait' : 'Processing complete!'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Credit Approval Dashboard Screen
+  if (currentScreen === 'creditApproval') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header with Logo */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="px-6 py-4">
+            <div className="flex items-center">
+              <div className="flex items-center space-x-2">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
+                  <div className="grid grid-cols-2 gap-1">
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                  </div>
+                </div>
+                <div className="text-red-600 font-bold text-lg">
+                  ADITYA BIRLA<br />
+                  <span className="text-red-700">CAPITAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Email Notification */}
+        {showEmailNotification && (
+          <div className="fixed top-20 right-6 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 max-w-sm animate-slide-in">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 text-sm">CAM Generated Successfully!</h4>
+                <p className="text-gray-600 text-xs mt-1">Credit Assessment Memorandum has been generated and sent to the credit manager's email ID.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="flex h-[calc(100vh-80px)]">
+          {/* Left Sidebar */}
+          <div className="w-80 bg-white border-r border-gray-200 p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Credit Approval Dashboard</h2>
+            <p className="text-gray-500 text-sm mb-8">Review and make final decision on credit application</p>
+
+            {/* Application Summary */}
+            <div className="mb-8">
+              <div className="flex items-center space-x-2 mb-4">
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 className="font-semibold text-gray-900">Application Summary</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Applicant</p>
+                  <p className="font-medium text-gray-900">Vishnu Packwell Pvt Ltd</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Loan Amount</p>
+                  <p className="font-medium text-gray-900">₹35,00,000</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Purpose</p>
+                  <p className="font-medium text-gray-900">Working Capital & Equipment</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Tenure</p>
+                  <p className="font-medium text-gray-900">60 Months</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Interest Rate</p>
+                  <p className="font-medium text-gray-900">12.5% p.a.</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Risk Rating</p>
+                  <div className="flex items-center space-x-2">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      BB+
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Security</p>
+                  <p className="font-medium text-gray-900">Property Mortgage (₹45L)</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Decision Section */}
+            <div className="mb-8">
+              <div className="flex items-center space-x-2 mb-4">
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <h3 className="font-semibold text-gray-900">Decision</h3>
+              </div>
+              
+              <div className="space-y-3">
+                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-md font-medium flex items-center justify-center space-x-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Approve</span>
+                </button>
+                
+                <button className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-4 rounded-md font-medium flex items-center justify-center space-x-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Send Back</span>
+                </button>
+                
+                <button className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-md font-medium flex items-center justify-center space-x-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <span>Reject</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Comments */}
+            <div>
+              <p className="text-sm font-medium text-gray-900 mb-2">Comments</p>
+              <textarea
+                placeholder="Add your decision comments here..."
+                className="w-full h-24 p-3 border border-gray-300 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          {/* Right Content Area */}
+          <div className="flex-1 p-6">
+            <div className="bg-white rounded-lg border border-gray-200 h-full">
+              {/* CAM Document Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <div className="flex items-center space-x-3">
+                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <h3 className="text-lg font-semibold text-gray-900">Credit Assessment Memorandum</h3>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    CAM Document
+                  </span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 text-sm text-gray-500">
+                    <span>Pages:</span>
+                    <button className="w-8 h-8 bg-red-600 text-white rounded text-xs font-medium">1</button>
+                    <button className="w-8 h-8 border border-gray-300 rounded text-xs hover:bg-gray-50">2</button>
+                    <button className="w-8 h-8 border border-gray-300 rounded text-xs hover:bg-gray-50">3</button>
+                    <span className="text-xs">Page 1 of 3</span>
+                  </div>
+                  <button className="text-sm text-blue-600 hover:text-blue-800 flex items-center space-x-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    <span>Fit to width</span>
+                  </button>
+                  <div className="text-sm text-gray-500">
+                    Zoom: 100%
+                  </div>
+                </div>
+              </div>
+
+              {/* CAM Document Content */}
+              <div className="p-8 h-full overflow-y-auto">
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-8">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Credit Assessment Memo</h1>
+                    <p className="text-gray-600">Application No: CAM-2024-001</p>
+                  </div>
+
+                  {/* Section 1: Borrower's Profile */}
+                  <div className="mb-8">
+                    <h2 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-200 pb-2">SECTION 1: Borrower's Profile</h2>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Legal Name of Business:</h3>
+                        <p className="text-blue-600 mb-4">Vishnu Packwell Private Limited</p>
+                        
+                        <h3 className="font-semibold text-gray-900 mb-2">Name of Key Promoters:</h3>
+                        <p className="text-gray-700 mb-4">Ankit Babbar, Ritu Babbar</p>
+                        
+                        <h3 className="font-semibold text-gray-900 mb-2">Constitution:</h3>
+                        <p className="text-blue-600">Private Limited Company</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Date of Incorporation:</h3>
+                        <p className="text-gray-700 mb-4">18/09/2017</p>
+                        
+                        <h3 className="font-semibold text-gray-900 mb-2">GST Number(s):</h3>
+                        <p className="text-gray-700 mb-4">09AAGCV1053MTZJ</p>
+                        
+                        <h3 className="font-semibold text-gray-900 mb-2">Udyam Number:</h3>
+                        <p className="text-blue-600">UDYAM-DL-06-0023062</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 2: Business Profile */}
+                  <div className="mb-8">
+                    <h2 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-200 pb-2">SECTION 2: Business Profile</h2>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">GST Registered Address:</h3>
+                        <p className="text-blue-600">Industrial Plot No. B-79, Sector-80, Gautambuddha Nagar, Uttar Pradesh, 201301</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Nature of Business:</h3>
+                        <span className="text-gray-700">Manufacturing</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Property Type:</h3>
+                        <span className="text-blue-600">Industrial</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 3: Financial Analysis */}
+                  <div className="mb-8">
+                    <h2 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-200 pb-2">SECTION 3: Financial Analysis</h2>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Revenue Analysis:</h3>
+                        <p className="text-gray-700">Financial statements show consistent growth with a CAGR of 18.5% over the past three years. The company has maintained stable margins despite market volatility.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Profitability:</h3>
+                        <p className="text-gray-700">EBITDA margins have improved from 12% to 15% indicating efficient cost management and operational excellence.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Cash Flow:</h3>
+                        <p className="text-gray-700">Strong operational cash generation with positive free cash flows across all review periods, ensuring adequate debt servicing capability.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Working Capital:</h3>
+                        <p className="text-blue-600">Well-managed working capital cycle with optimized inventory turnover and receivables collection.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
