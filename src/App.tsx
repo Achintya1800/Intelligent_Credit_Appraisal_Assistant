@@ -127,53 +127,53 @@ function App() {
     setCamProgress(0);
     setCompletedSteps([]);
     
-    // Slower smooth progressive loading with different messages
+    // Smooth progressive loading with different messages
     let currentProgress = 0;
     
-    // Step 1: Reading Documents (0% to 44%) - slower
+    // Step 1: Reading Documents (0% to 44%)
     const step1Interval = setInterval(() => {
-      currentProgress += 1;
+      currentProgress += 2;
       setCamProgress(currentProgress);
       if (currentProgress >= 44) {
         clearInterval(step1Interval);
         setCompletedSteps([0]);
         
-        // Step 2: Building Basic CAM (44% to 58%) - slower
+        // Step 2: Building Basic CAM (44% to 58%)
         const step2Interval = setInterval(() => {
-          currentProgress += 0.5;
+          currentProgress += 1;
           setCamProgress(currentProgress);
           if (currentProgress >= 58) {
             clearInterval(step2Interval);
             setCompletedSteps([0, 1]);
             
-            // Step 3: Financial Plotting (58% to 87%) - slower
+            // Step 3: Financial Plotting (58% to 87%)
             const step3Interval = setInterval(() => {
-              currentProgress += 0.5;
+              currentProgress += 1;
               setCamProgress(currentProgress);
               if (currentProgress >= 87) {
                 clearInterval(step3Interval);
                 setCompletedSteps([0, 1, 2]);
                 
-                // Step 4: Generating CAM Report (87% to 100%) - slower
+                // Step 4: Generating CAM Report (87% to 100%)
                 const step4Interval = setInterval(() => {
-                  currentProgress += 0.5;
+                  currentProgress += 1;
                   setCamProgress(currentProgress);
                   if (currentProgress >= 100) {
                     clearInterval(step4Interval);
                     setCompletedSteps([0, 1, 2, 3]);
                   }
-                }, 200);
+                }, 100);
               }
-            }, 300);
+            }, 150);
           }
-        }, 400);
+        }, 200);
       }
-    }, 200);
+    }, 100);
 
     // Return to CM Dashboard after completion
     setTimeout(() => {
       setCurrentScreen('cmDashboard');
-    }, 35000); // 35 seconds total
+    }, 18000); // 18 seconds total
   };
 
   // Get current status message based on progress
