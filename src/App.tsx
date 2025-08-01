@@ -495,17 +495,19 @@ function App() {
                   </td>
                   <td className="px-6 py-4">
                     {app.applicant === 'Vishnu Packwell Pvt Ltd' ? (
-                      isDocumentsApproved ? (
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium">
-                          Send to CM Queue
+                      app.status === 'Verified' ? (
+                        <button 
+                          onClick={handleCMQueue}
+                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium"
+                        >
+                          CM Queue
                         </button>
                       ) : (
                         <button 
-                          onClick={handleCMQueue}
                           onClick={handleVerifyDocuments}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
                         >
-                          CM Queue
+                          Verify Documents
                         </button>
                       )
                     ) : (
