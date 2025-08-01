@@ -260,7 +260,7 @@ function App() {
           {/* Back Button - Bottom Left */}
           <button
             onClick={handleBackToDashboard}
-            className="absolute bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800"
+            className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
           >
             <ArrowLeft size={16} />
             <span>Back</span>
@@ -388,6 +388,16 @@ function App() {
           </table>
         </div>
       </div>
+
+      {/* Back Button - Bottom Left (for dashboard) */}
+      <button
+        onClick={() => {/* Add navigation logic if needed */}}
+        className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
+        style={{ display: 'none' }} // Hidden on dashboard as it's the main page
+      >
+        <ArrowLeft size={16} />
+        <span>Back</span>
+      </button>
 
       {/* Verify Documents Popup */}
       {showVerifyPopup && (
