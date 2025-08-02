@@ -654,15 +654,13 @@ function App() {
                         }`}
                       >
                         <p className="text-sm">{msg.message}</p>
-                      </div>
-                    </div>
                   ))}
                   <div className="text-right">
                     <p className="text-sm text-gray-500 mb-2">Application No: CAM-2024-007</p>
                   </div>
                 </div>
 
-                {/* Chat Input */}
+                <div className="flex items-center justify-start gap-4 mb-8">
                 <div className="p-4 border-t border-gray-200 bg-white">
                   <div className="flex items-center gap-3">
                     <input
