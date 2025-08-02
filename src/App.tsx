@@ -395,51 +395,17 @@ function App() {
                             <div>
                               <span className="font-medium text-gray-700">Legal Name of Business:</span>
                               <p className="text-gray-900">Vishnu Packwell Private Limited</p>
+                            </div>
                           </div>
                         </div>
                         <div>
                           <div className="space-y-3">
                             <div>
-                value={getSectionComments(activeSection)}
-                readOnly
                               <span className="font-medium text-gray-700">Date of Incorporation:</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                        Risk Assessment
-            <div className="p-8">
-              <div className="max-w-4xl mx-auto">
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-                  <div className="p-6 border-b border-gray-200">
-                    <h2 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h2>
-                    <p className="text-gray-600 mt-1">Application No: CAM-2024-007</p>
-                  </div>
-                  
-                  <div className="p-6">
-                    {getSectionContent(activeSection)}
-                  </div>
-                  
-                  {/* Decision Buttons at Bottom */}
-                  <div className="p-6 border-t border-gray-200 bg-gray-50">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                      <User className="w-5 h-5 mr-2" />
-                      Decision
-                    </h3>
-                    <div className="flex space-x-4">
-                      <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                        <Check className="w-4 h-4" />
-                        <span>Approve</span>
-                      </button>
-                      <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                        <RotateCcw className="w-4 h-4" />
-                        <span>Send Back</span>
-                      </button>
-                      <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        <X className="w-4 h-4" />
-                        <span>Reject</span>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -520,47 +486,6 @@ function App() {
           </div>
         </div>
 
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-lg">ABC</span>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h1>
-                  <p className="text-gray-600">Create and edit Credit Assessment Memorandum</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                    Risk Rating: BB+
-                  </span>
-                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                    Limit: ₹25L
-                  </span>
-                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                    Tenor: 60M
-                  </span>
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                    50% Complete
-                  </span>
-                </div>
-                <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                  <Download className="w-4 h-4" />
-                  <span>Generate PDF</span>
-                </button>
-                <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                  <Send className="w-4 h-4" />
-                  <span>Send to Credit</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Email Popup */}
         {showEmailPopup && (
           <div className="fixed top-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm z-50">
@@ -582,7 +507,6 @@ function App() {
           </div>
         )}
 
-        <div className="flex" style={{ height: 'calc(100vh - 100px)' }}>
         <button
           onClick={() => setCurrentScreen('cmDashboard')}
           className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
@@ -1147,25 +1071,41 @@ function App() {
                 </div>
               </div>
 
-          <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto">
+              {/* Document Checklist */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-gray-900 mb-4">Document Checklist</h3>
+                {documentChecklist.map((doc, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="text-green-600" size={16} />
+                      <span className="text-gray-900">{doc.name}</span>
+                    </div>
+                    <span className="text-green-600 text-sm font-medium">Uploaded</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex space-x-4 mt-8">
+                <button
+                  onClick={handleApproveDocuments}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium"
+                >
+                  Approve Documents
+                </button>
+                <button
+                  onClick={closeVerifyPopup}
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-4 rounded-lg font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
-                {documentSections.map((section) => (
-                  <div
-                    key={section.id}
-                    onClick={() => setActiveSection(section.id)}
-                    className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                      activeSection === section.id
-                        ? 'bg-red-50 border border-red-200'
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    <span className={activeSection === section.id ? 'text-red-600 font-bold' : 'text-gray-600'}>
-                      {section.icon}
-                    </span>
-                    <span className={activeSection === section.id ? 'text-red-700 font-medium' : 'text-gray-700'}>
-                      {section.title}
-                    </span>
-                  </div>
-                ))}
+  );
+}
+
+export default App;
