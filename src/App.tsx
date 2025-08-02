@@ -972,10 +972,21 @@ function App() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900">Received New Application</td>
-                  <td className="px-6 py-4">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium">
-                      <span onClick={handleGenerateCAM}>Generate Basic CAM</span>
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setCurrentScreen('camGeneration')}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        Generate Basic CAM
+                      </button>
+                      <button 
+                        disabled={true}
+                        className="bg-gray-300 text-gray-500 cursor-not-allowed px-4 py-2 rounded-lg transition-colors"
+                      >
+                        Send to CPA
+                      </button>
+                    </div>
                   </td>
                 </tr>
                 {applications.slice(0, 4).map((app) => (
@@ -989,13 +1000,45 @@ function App() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
-                    <td className="px-6 py-4">
-                      <button 
-                        onClick={() => setShowVerifyPopup(true)}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      >
-                        View
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {app.status === 'Received New Application' ? (
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => setCurrentScreen('camGeneration')}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            Generate Basic CAM
+                          </button>
+                          <button 
+                            disabled={app.status !== 'Basic CAM Generated'}
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                              app.status === 'Basic CAM Generated' 
+                                ? 'bg-green-600 text-white hover:bg-green-700' 
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                          >
+                            Send to CPA
+                          </button>
+                        </div>
+                      ) : app.status === 'Basic CAM Generated' ? (
+                        <div className="flex gap-2">
+                          <button 
+                            disabled
+                            className="bg-gray-300 text-gray-500 px-4 py-2 rounded-lg cursor-not-allowed"
+                          >
+                            Generate Basic CAM
+                          </button>
+                          <button 
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                          >
+                            Send to CPA
+                          </button>
+                        </div>
+                      ) : (
+                        <button className="text-blue-600 hover:text-blue-800 transition-colors">
+                          View
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
