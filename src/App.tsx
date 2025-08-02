@@ -7,6 +7,7 @@ function App() {
   const [showVerifyPopup, setShowVerifyPopup] = useState(false);
   const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
   const [camProgress, setCamProgress] = useState(0);
+  const [isCreatingBasicCam, setIsCreatingBasicCam] = useState(false);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [securityDetailsClicked, setSecurityDetailsClicked] = useState(false);
@@ -183,6 +184,23 @@ function App() {
       setCurrentScreen('camOutput');
       setShowEmailPopup(true);
     }, 18000); // 18 seconds total
+  };
+
+  const handleCompleteCamGeneration = () => {
+    setIsCreatingBasicCam(true);
+    setTimeout(() => {
+      setIsCreatingBasicCam(false);
+      setCurrentScreen('cmDashboard');
+      // Update the status of the first application to "Basic CAM Generated"
+      setApplications(prev => prev.map((app, index) => 
+        index === 0 ? { ...app, status: 'Basic CAM Generated' } : app
+      ));
+    }, 3000);
+  };
+
+  const resetCamGeneration = () => {
+    setCompletedSteps([]);
+    setCamProgress(0);
   };
 
   // Get current status message based on progress
@@ -460,6 +478,22 @@ function App() {
         return "Add your comments for this section...";
     }
   };
+
+  // Basic CAM Creation Loading Screen
+  if (isCreatingBasicCam) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Creating a Basic CAM</h2>
+          <p className="text-gray-600">Please wait, generating basic CAM...</p>
+          <div className="w-64 bg-gray-200 rounded-full h-2 mx-auto mt-4">
+            <div className="bg-red-500 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // CAM Output Screen
   if (currentScreen === 'camOutput') {
