@@ -956,10 +956,12 @@ function App() {
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{app.id}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{app.applicant}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{app.amount}</td>
-                    <td className="px-6 py-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                    <div className="flex flex-wrap items-center gap-3">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                         {app.program}
                       </span>
+                    </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
                     <td className="px-6 py-4">
