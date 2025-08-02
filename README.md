@@ -39,6 +39,7 @@ The Intelligent Credit Appraisal Assistant is a modern web application designed 
   - Audit Reports
 - **Real-time Progress**: Visual progress tracking with step-by-step completion
 - **Multi-format Support**: PDF, XLSX, MSG, HTML formats supported
+- **Decision Control**: Security-gated approval process requiring completion of all verification steps
 
 ## 🛠️ Technology Stack
 
@@ -94,7 +95,8 @@ npm run build
 1. **CM Dashboard**: Review applications ready for processing
 2. **CAM Generation**: Initiate automated CAM generation process
 3. **Progress Monitoring**: Track real-time progress of CAM generation
-4. **Completion**: Review generated CAM reports
+4. **Security Verification**: Complete security details verification to unlock decision buttons
+5. **Decision Making**: Approve, send back, or reject applications after verification
 
 ## 🎨 UI/UX Features
 
@@ -103,6 +105,7 @@ npm run build
 - **Interactive Elements**: Smooth animations and transitions
 - **Progress Indicators**: Visual feedback for all processes
 - **Loading States**: Engaging loading animations with progress tracking
+- **Conditional UI**: Security-gated controls that unlock based on user actions
 
 ## 📊 Application States
 
@@ -117,6 +120,11 @@ npm run build
 2. **Building Basic CAM** (44-58%): Data extraction and structuring
 3. **Financial Plotting** (58-87%): Financial analysis and calculations
 4. **Generating CAM Report** (87-100%): Final report compilation
+
+### Security Controls
+- **Gated Decisions**: Decision buttons remain disabled until security verification is complete
+- **Progressive Unlock**: UI elements unlock as verification steps are completed
+- **Visual Feedback**: Clear indication of enabled/disabled states
 
 ## 🔧 Available Scripts
 
