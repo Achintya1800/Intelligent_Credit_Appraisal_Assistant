@@ -967,66 +967,53 @@ function App() {
                 />
                 <label
                   htmlFor="file-upload"
-                  className="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md inline-block"
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md cursor-pointer inline-block"
                 >
-                  Select Files
+                  Choose Files
                 </label>
-              </div>
-
-              {/* Selected Files Display */}
-              {selectedFiles && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Selected Files:</h3>
-                  <div className="space-y-2">
-                    {Array.from(selectedFiles).map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm text-gray-700">{file.name}</span>
-                        <span className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                      </div>
-                    ))}
+                {selectedFiles && (
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-600">
+                      {selectedFiles.length} file(s) selected
+                    </p>
+                    <button
+                      onClick={handleUpload}
+                      className="mt-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md"
+                    >
+                      Upload
+                    </button>
                   </div>
-                </div>
-              )}
-
-              {/* Document Checklist */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Checklist</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {documentChecklist.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="text-green-600" size={18} />
-                        <span className="text-gray-900 font-medium">{doc.name}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Uploaded
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex justify-center space-x-4">
-                <button
-                  onClick={handleBackToDashboard}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleUpload}
-                  disabled={!selectedFiles}
-                  className={`px-6 py-2 rounded-md font-medium ${
-                    selectedFiles
-                      ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-                >
-                  Upload & Process
-                </button>
+              {/* Process Steps */}
+              <div className="flex justify-center space-x-8 mb-8">
+                {/* Step 1 */}
+                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
+                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
+                    1
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Upload Docs</h3>
+                  <p className="text-sm text-gray-500">Drag & drop documents</p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
+                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
+                    2
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">AI Analysis</h3>
+                  <p className="text-sm text-gray-500">Intelligent Processing</p>
+                </div>
+
+                {/* Step 3 */}
+                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
+                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
+                    3
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Generate CAM</h3>
+                  <p className="text-sm text-gray-500">Automated reports</p>
+                </div>
               </div>
             </div>
           </div>
@@ -1044,7 +1031,7 @@ function App() {
     );
   }
 
-  // Main Dashboard Screen
+  // Dashboard Screen
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with Logo */}
@@ -1074,25 +1061,16 @@ function App() {
         {/* Dashboard Header */}
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-red-600 mb-2">Credit Application Dashboard</h1>
-            <p className="text-gray-500">Manage and track credit applications</p>
+            <h1 className="text-3xl font-bold text-red-600 mb-2">Relationship Manager Dashboard</h1>
+            <p className="text-gray-500">Manage credit applications and track progress</p>
           </div>
-          <div className="flex space-x-3">
-            <button
-              onClick={handleNewApplicationClick}
-              className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
-            >
-              <Plus size={16} />
-              <span>New Application</span>
-            </button>
-            <button
-              onClick={handleCMQueue}
-              className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-            >
-              <Clock size={16} />
-              <span>CM Queue</span>
-            </button>
-          </div>
+          <button 
+            onClick={handleNewApplicationClick}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center space-x-2"
+          >
+            <Plus size={16} />
+            <span>New Application</span>
+          </button>
         </div>
 
         {/* Search and Filter */}
@@ -1138,31 +1116,35 @@ function App() {
                       {app.program}
                     </span>
                   </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      app.status === 'Verified' ? 'bg-green-100 text-green-800' :
-                      app.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                      'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {app.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-red-600 h-2 rounded-full" 
-                        style={{ width: `${app.progress}%` }}
-                      ></div>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div className="bg-red-600 h-2 rounded-full" style={{ width: `${app.progress}%` }}></div>
+                      </div>
+                      <span className="text-xs text-gray-500">{app.progress}%</span>
                     </div>
-                    <span className="text-xs text-gray-500 mt-1">{app.progress}%</span>
                   </td>
                   <td className="px-6 py-4">
-                    <button 
-                      onClick={handleVerifyDocuments}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                    >
-                      View
-                    </button>
+                    {app.applicant === 'Vishnu Packwell Pvt Ltd' ? (
+                      app.status === 'Verified' ? (
+                        <button 
+                          onClick={handleCMQueue}
+                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium"
+                        >
+                          CM Queue
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={handleVerifyDocuments}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
+                        >
+                          Verify Documents
+                        </button>
+                      )
+                    ) : (
+                      <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -1171,50 +1153,85 @@ function App() {
         </div>
       </div>
 
+      {/* Back Button - Bottom Left (for dashboard) */}
+      <button
+        onClick={() => {/* Add navigation logic if needed */}}
+        className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
+        style={{ display: 'none' }} // Hidden on dashboard as it's the main page
+      >
+        <ArrowLeft size={16} />
+        <span>Back</span>
+      </button>
+
       {/* Verify Documents Popup */}
       {showVerifyPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Document Verification</h2>
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            {/* Popup Header */}
+            <div className="flex items-center justify-between p-6 border-b">
+              <div>
+                <h2 className="text-2xl font-bold text-red-600">Document Verification</h2>
+                <p className="text-gray-500 mt-1">Vishnu Packwell Pvt Ltd - APP005</p>
+              </div>
               <button
                 onClick={closeVerifyPopup}
                 className="text-gray-400 hover:text-gray-600"
               >
-                <X size={20} />
+                <X size={24} />
               </button>
-            </div>
-            
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Uploaded Documents</h3>
-              <div className="space-y-3">
-                {documentChecklist.map((doc, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="text-green-600" size={18} />
-                      <span className="text-gray-900 font-medium">{doc.name}</span>
-                    </div>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Verified
-                    </span>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={closeVerifyPopup}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleApproveDocuments}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
-              >
-                Approve Documents
-              </button>
+            {/* Document Status */}
+            <div className="p-6">
+              <div className="mb-6">
+                <div className="flex items-center space-x-2 mb-4">
+                  <CheckCircle className="text-green-600" size={20} />
+                  <span className="text-green-600 font-medium">All documents uploaded successfully</span>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-green-800 text-sm">
+                    <strong>Status:</strong> Ready for verification • <strong>Upload Date:</strong> {new Date().toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+
+              {/* Document Checklist */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Checklist</h3>
+                <div className="space-y-3">
+                  {documentChecklist.map((doc, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="text-green-600" size={18} />
+                        <span className="text-gray-900 font-medium">{doc.name}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Uploaded
+                        </span>
+                        <Clock className="text-gray-400" size={14} />
+                        <span className="text-xs text-gray-500">2 min ago</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end space-x-3 mt-8 pt-6 border-t">
+                <button
+                  onClick={closeVerifyPopup}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Close
+                </button>
+                <button 
+                  onClick={handleApproveDocuments}
+                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
+                >
+                  Approve Documents
+                </button>
+              </div>
             </div>
           </div>
         </div>
