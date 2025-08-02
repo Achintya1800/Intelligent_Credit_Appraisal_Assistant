@@ -395,140 +395,51 @@ function App() {
                             <div>
                               <span className="font-medium text-gray-700">Legal Name of Business:</span>
                               <p className="text-gray-900">Vishnu Packwell Private Limited</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">Name of Key Promoters:</span>
-                              <p className="text-gray-900">Ankit Babbar, Ritu Babbar</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">Constitution:</span>
-                              <p className="text-gray-900">Private Limited Company</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">CIN No:</span>
-                              <p className="text-gray-900">N/A</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">PAN of the Entity:</span>
-                              <p className="text-gray-900">AAACV****63M</p>
-                            </div>
                           </div>
                         </div>
                         <div>
                           <div className="space-y-3">
                             <div>
+                value={getSectionComments(activeSection)}
+                readOnly
                               <span className="font-medium text-gray-700">Date of Incorporation:</span>
-                              <p className="text-gray-900">18/09/2017</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">GST Number(s):</span>
-                              <p className="text-gray-900">09*****M121</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">Udyam Number:</span>
-                              <p className="text-gray-900">UDYAM-DL-06-0023962</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">Mobile Number of Promoter:</span>
-                              <p className="text-gray-900">98****231</p>
-                            </div>
-                            <div>
-                              <span className="font-medium text-gray-700">Email ID:</span>
-                              <p className="text-blue-600">ankit_babbar@hotmail.com</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Section 2: Business Profile */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 bg-blue-50 p-3 rounded">
-                        SECTION 2: Business Profile
-                      </h3>
-                      <div>
-                        <div className="mb-4">
-                          <span className="font-medium text-gray-700">GST Registered Address:</span>
-                          <p className="text-gray-900 mt-1">
-                            Industrial Plot No. B-79, Sector-80, Gautambuddha Nagar, Uttar Pradesh, 201301
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Financial Summary */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 bg-green-50 p-3 rounded">
-                        Financial Summary
-                      </h3>
-                      <div className="overflow-x-auto">
-                        <table className="w-full border-collapse border border-gray-300">
-                          <thead>
-                            <tr className="bg-gray-50">
-                              <th className="border border-gray-300 p-3 text-left">Particulars</th>
-                              <th className="border border-gray-300 p-3 text-right">FY 2022-23</th>
-                              <th className="border border-gray-300 p-3 text-right">FY 2023-24</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="border border-gray-300 p-3 font-medium">Total Revenue</td>
-                              <td className="border border-gray-300 p-3 text-right">₹45,67,890</td>
-                              <td className="border border-gray-300 p-3 text-right">₹52,34,567</td>
-                            </tr>
-                            <tr>
-                              <td className="border border-gray-300 p-3 font-medium">EBITDA</td>
-                              <td className="border border-gray-300 p-3 text-right">₹8,90,456</td>
-                              <td className="border border-gray-300 p-3 text-right">₹10,23,789</td>
-                            </tr>
-                            <tr>
-                              <td className="border border-gray-300 p-3 font-medium">Net Profit</td>
-                              <td className="border border-gray-300 p-3 text-right">₹5,67,234</td>
-                              <td className="border border-gray-300 p-3 text-right">₹6,78,901</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    {/* Risk Assessment */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 bg-yellow-50 p-3 rounded">
                         Risk Assessment
-                      </h3>
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                            <h4 className="font-medium text-green-800 mb-2">Credit Score</h4>
-                            <p className="text-2xl font-bold text-green-600">750</p>
-                            <p className="text-sm text-green-600">Excellent</p>
-                          </div>
-                          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                            <h4 className="font-medium text-blue-800 mb-2">DSCR</h4>
-                            <p className="text-2xl font-bold text-blue-600">2.1x</p>
-                            <p className="text-sm text-blue-600">Strong</p>
-                          </div>
-                          <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                            <h4 className="font-medium text-orange-800 mb-2">Risk Rating</h4>
-                            <p className="text-2xl font-bold text-orange-600">BB+</p>
-                            <p className="text-sm text-orange-600">Moderate</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Recommendation */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 bg-purple-50 p-3 rounded">
-                        Recommendation
-                      </h3>
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p className="text-green-800 font-medium mb-2">✓ APPROVED</p>
-                        <p className="text-gray-700">
-                          Based on the comprehensive analysis of financial statements, credit history, and business profile, 
-                          we recommend approval of the term loan facility of ₹25,00,000 for Vishnu Packwell Private Limited.
-                        </p>
-                      </div>
+            <div className="p-8">
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                  <div className="p-6 border-b border-gray-200">
+                    <h2 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h2>
+                    <p className="text-gray-600 mt-1">Application No: CAM-2024-007</p>
+                  </div>
+                  
+                  <div className="p-6">
+                    {getSectionContent(activeSection)}
+                  </div>
+                  
+                  {/* Decision Buttons at Bottom */}
+                  <div className="p-6 border-t border-gray-200 bg-gray-50">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                      <User className="w-5 h-5 mr-2" />
+                      Decision
+                    </h3>
+                    <div className="flex space-x-4">
+                      <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <Check className="w-4 h-4" />
+                        <span>Approve</span>
+                      </button>
+                      <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                        <RotateCcw className="w-4 h-4" />
+                        <span>Send Back</span>
+                      </button>
+                      <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        <X className="w-4 h-4" />
+                        <span>Reject</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -609,6 +520,47 @@ function App() {
           </div>
         </div>
 
+        {/* Header */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-lg">ABC</span>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h1>
+                  <p className="text-gray-600">Create and edit Credit Assessment Memorandum</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                    Risk Rating: BB+
+                  </span>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                    Limit: ₹25L
+                  </span>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                    Tenor: 60M
+                  </span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                    50% Complete
+                  </span>
+                </div>
+                <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                  <Download className="w-4 h-4" />
+                  <span>Generate PDF</span>
+                </button>
+                <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                  <Send className="w-4 h-4" />
+                  <span>Send to Credit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Email Popup */}
         {showEmailPopup && (
           <div className="fixed top-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm z-50">
@@ -630,7 +582,7 @@ function App() {
           </div>
         )}
 
-        {/* Back Button */}
+        <div className="flex" style={{ height: 'calc(100vh - 100px)' }}>
         <button
           onClick={() => setCurrentScreen('cmDashboard')}
           className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
@@ -1195,49 +1147,25 @@ function App() {
                 </div>
               </div>
 
-              {/* Document Checklist */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Checklist</h3>
-                <div className="space-y-3">
-                  {documentChecklist.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="text-green-600" size={18} />
-                        <span className="text-gray-900 font-medium">{doc.name}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Uploaded
-                        </span>
-                        <Clock className="text-gray-400" size={14} />
-                        <span className="text-xs text-gray-500">2 min ago</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-end space-x-3 mt-8 pt-6 border-t">
-                <button
-                  onClick={closeVerifyPopup}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                >
-                  Close
-                </button>
-                <button 
-                  onClick={handleApproveDocuments}
-                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
-                >
-                  Approve Documents
-                </button>
-              </div>
-            </div>
-          </div>
+          <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto">
         </div>
       )}
     </div>
-  );
-}
-
-export default App;
+                {documentSections.map((section) => (
+                  <div
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                      activeSection === section.id
+                        ? 'bg-red-50 border border-red-200'
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={activeSection === section.id ? 'text-red-600 font-bold' : 'text-gray-600'}>
+                      {section.icon}
+                    </span>
+                    <span className={activeSection === section.id ? 'text-red-700 font-medium' : 'text-gray-700'}>
+                      {section.title}
+                    </span>
+                  </div>
+                ))}
