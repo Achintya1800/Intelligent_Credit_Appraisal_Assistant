@@ -960,283 +960,348 @@ function App() {
                 <p className="text-gray-500 mb-4">Drag your files here or click to browse</p>
                 <input
                   type="file"
-                  multiple
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  id="file-upload"
-                />
-                <label
-                  htmlFor="file-upload"
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md cursor-pointer inline-block"
-                >
-                  Choose Files
-                </label>
-                {selectedFiles && (
-                  <div className="mt-4">
-                    <p className="text-sm text-gray-600">
-                      {selectedFiles.length} file(s) selected
-                    </p>
-                    <button
-                      onClick={handleUpload}
+              {/* Action Buttons */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex gap-2 mb-4">
+                  <button className="flex-1 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-xs font-medium text-gray-700 flex items-center justify-center">
+                    <FileText className="w-3 h-3 mr-1" />
+                    Generate PDF
+                  </button>
+                  <button className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-lg px-3 py-2 text-xs font-medium flex items-center justify-center">
+                    <Send className="w-3 h-3 mr-1" />
+                    Send to Credit
+                  </button>
+                </div>
                       className="mt-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md"
                     >
-                      Upload
-                    </button>
                   </div>
-                )}
-              </div>
-
-              {/* Process Steps */}
-              <div className="flex justify-center space-x-8 mb-8">
-                {/* Step 1 */}
-                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
+              <div className="flex-1 overflow-y-auto p-6">
+                <h3 className="text-sm font-semibold text-gray-900 mb-4">Document Outline</h3>
+                <div className="space-y-1">
+                  <div className="flex items-center p-3 bg-red-50 border-l-3 border-red-500 rounded-r-lg">
+                    <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-xs font-semibold text-red-600">1</span>
+                    </div>
+                    <span className="text-sm font-medium text-red-700">Executive Summary</span>
                   <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
-                    1
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Upload Docs</h3>
-                  <p className="text-sm text-gray-500">Drag & drop documents</p>
-                </div>
-
-                {/* Step 2 */}
-                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
-                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
-                    2
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">AI Analysis</h3>
+                  <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                      <User className="w-3 h-3 text-gray-500" />
+                    </div>
+                    <span className="text-sm text-gray-700">Applicant Profile</span>
                   <p className="text-sm text-gray-500">Intelligent Processing</p>
-                </div>
-
-                {/* Step 3 */}
+                  <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                      <BarChart3 className="w-3 h-3 text-gray-500" />
+                    </div>
+                    <span className="text-sm text-gray-700">Financial Analysis</span>
                 <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
-                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
-                    3
-                  </div>
+                  <div className="flex items-center p-3 bg-red-50 border-l-3 border-red-500 rounded-r-lg">
+                    <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                      <AlertTriangle className="w-3 h-3 text-red-600" />
+                    </div>
+                    <span className="text-sm font-medium text-red-700">Risk Assessment</span>
                   <h3 className="font-semibold text-gray-900 mb-2">Generate CAM</h3>
-                  <p className="text-sm text-gray-500">Automated reports</p>
-                </div>
-              </div>
+                  <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                      <Shield className="w-3 h-3 text-gray-500" />
+                    </div>
+                    <span className="text-sm text-gray-700">Security Details</span>
             </div>
-          </div>
-
-          {/* Back Button - Bottom Left */}
+                  <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                      <CheckCircle className="w-3 h-3 text-gray-500" />
+                    </div>
+                    <span className="text-sm text-gray-700">Recommendation</span>
           <button
             onClick={handleBackToDashboard}
             className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
           >
             <ArrowLeft size={16} />
-            <span>Back</span>
-          </button>
-        </div>
+              <div className="p-6 border-t border-gray-100">
+                <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+                  <User className="w-4 h-4 mr-2 text-gray-500" />
       </div>
     );
-  }
-
-  // Dashboard Screen
+                <div className="space-y-3">
+                  <button className="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-3 text-sm font-medium flex items-center justify-center transition-colors">
+                    <Check className="w-4 h-4 mr-2" />
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header with Logo */}
-      <div className="bg-white shadow-sm border-b">
+                  <button className="w-full bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-3 text-sm font-medium flex items-center justify-center transition-colors">
+                    <RotateCcw className="w-4 h-4 mr-2" />
         <div className="px-6 py-4">
           <div className="flex items-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
+                  <button className="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-3 text-sm font-medium flex items-center justify-center transition-colors">
+                    <X className="w-4 h-4 mr-2" />
                 <div className="grid grid-cols-2 gap-1">
                   <div className="w-2 h-2 bg-white rounded-sm"></div>
                   <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                  <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
                   <div className="w-2 h-2 bg-white rounded-sm"></div>
+                {/* Comments */}
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Comments</h3>
+                  <textarea 
+                    className="w-full border border-gray-200 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    rows={3}
+                    placeholder="Add your comments..."
+                  />
                 </div>
-              </div>
-              <div className="text-red-600 font-bold text-lg">
-                ADITYA BIRLA<br />
-                <span className="text-red-700">CAPITAL</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-
-      {/* Main Content */}
-      <div className="px-6 py-6">
-        {/* Dashboard Header */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-red-600 mb-2">Relationship Manager Dashboard</h1>
-            <p className="text-gray-500">Manage credit applications and track progress</p>
-          </div>
-          <button 
-            onClick={handleNewApplicationClick}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center space-x-2"
-          >
-            <Plus size={16} />
-            <span>New Application</span>
+                {/* Key Metrics */}
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Key Metrics</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                      <span className="text-sm text-gray-600">DSCR:</span>
+                      <span className="text-sm font-semibold text-green-600">2.1x</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                      <span className="text-sm text-gray-600">LTV:</span>
+                      <span className="text-sm font-semibold text-blue-600">55%</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                      <span className="text-sm text-gray-600">Probability of Default:</span>
+                      <span className="text-sm font-semibold text-orange-600">2.3%</span>
+                    </div>
           </button>
         </div>
 
         {/* Search and Filter */}
         <div className="mb-6">
           <div className="flex items-center space-x-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search Applications....."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              />
+            <div className="flex-1 bg-gray-50 overflow-y-auto">
+              <div className="max-w-5xl mx-auto p-8">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="p-8">
             </div>
-            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-              <Filter size={16} />
-              <span>Filter</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Applications Table */}
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Application ID</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Applicant</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Amount</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Program</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Status</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Progress</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {applications.map((app) => (
-                <tr key={app.id}>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{app.id}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{app.applicant}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{app.amount}</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      {app.program}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div className="bg-red-600 h-2 rounded-full" style={{ width: `${app.progress}%` }}></div>
+                    <div className="space-y-8">
+                      <div className="border-l-4 border-blue-500 bg-blue-50 p-6 rounded-r-lg">
+                        <h2 className="text-xl font-bold text-blue-900 mb-4">SECTION 1: Borrower's Profile</h2>
                       </div>
-                      <span className="text-xs text-gray-500">{app.progress}%</span>
+
+                      <div className="grid grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Legal Name of Business</h3>
+                            <p className="text-gray-900 font-medium">Vishnu Packwell Private Limited</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Name of Key Promoters</h3>
+                            <p className="text-gray-900 font-medium">Ankit Babbar, Ritu Babbar</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Constitution</h3>
+                            <p className="text-gray-900 font-medium">Private Limited Company</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">CIN No</h3>
+                            <p className="text-gray-900 font-medium">N/A</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">PAN of the Entity</h3>
+                            <p className="text-gray-900 font-medium">AAACV****G3M</p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Date of Incorporation</h3>
+                            <p className="text-gray-900 font-medium">18/09/2017</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">GST Number(s)</h3>
+                            <p className="text-gray-900 font-medium">09*****M121</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Udyam Number</h3>
+                            <p className="text-gray-900 font-medium">UDYAM-DL-06-0023962</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Mobile Number of Promoter</h3>
+                            <p className="text-gray-900 font-medium">98****231</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Email ID</h3>
+                            <p className="text-blue-600 font-medium">ankit_babbar@hotmail.com</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border-l-4 border-green-500 bg-green-50 p-6 rounded-r-lg">
+                        <h2 className="text-xl font-bold text-green-900 mb-4">SECTION 2: Business Profile</h2>
+                      </div>
+
+                      <div>
+                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">GST Registered Address</h3>
+                        <p className="text-gray-900 font-medium">Industrial Plot No. B-79, Sector-80, Gautambuddha Nagar, Uttar Pradesh, 201301</p>
+                      </div>
+
+                      <div className="border-l-4 border-yellow-500 bg-yellow-50 p-6 rounded-r-lg">
+                        <h2 className="text-xl font-bold text-yellow-900 mb-4">Financial Summary</h2>
+                      </div>
+
+                      <div className="overflow-hidden rounded-lg border border-gray-200">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Particulars</th>
+                              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-900 uppercase tracking-wider">FY 2022-23</th>
+                              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-900 uppercase tracking-wider">FY 2023-24</th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            <tr>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total Revenue</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">₹45,67,890</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">₹52,34,567</td>
+                            </tr>
+                            <tr className="bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">EBITDA</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">₹8,90,456</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">₹10,23,789</td>
+                            </tr>
+                            <tr>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Net Profit</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">₹5,67,234</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">₹6,78,901</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <div className="border-l-4 border-red-500 bg-red-50 p-6 rounded-r-lg">
+                        <h2 className="text-xl font-bold text-red-900 mb-4">Risk Assessment</h2>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-6 text-center">
+                          <div className="text-3xl font-bold text-green-800 mb-2">2.1x</div>
+                          <div className="text-sm font-medium text-green-600">DSCR</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6 text-center">
+                          <div className="text-3xl font-bold text-blue-800 mb-2">55%</div>
+                          <div className="text-sm font-medium text-blue-600">LTV</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-6 text-center">
+                          <div className="text-3xl font-bold text-orange-800 mb-2">2.3%</div>
+                          <div className="text-sm font-medium text-orange-600">Default Risk</div>
+                        </div>
+                      </div>
+
+                      <div className="border-l-4 border-purple-500 bg-purple-50 p-6 rounded-r-lg">
+                        <h2 className="text-xl font-bold text-purple-900 mb-4">Recommendation</h2>
+                        <p className="text-purple-800 leading-relaxed">
+                          Based on the comprehensive analysis of financial statements, business profile, and risk assessment, 
+                          the application shows strong fundamentals with acceptable risk parameters. The borrower demonstrates 
+                          consistent revenue growth and maintains healthy financial ratios. 
+                        </p>
+                        <div className="mt-4 p-4 bg-white rounded-lg border border-purple-200">
+                          <p className="text-purple-900 font-semibold">Recommendation: <span className="text-green-600">APPROVE</span> with standard terms and conditions.</p>
+                        </div>
+                      </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {app.applicant === 'Vishnu Packwell Pvt Ltd' ? (
-                      app.status === 'Verified' ? (
-                        <button 
-                          onClick={handleCMQueue}
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium"
-                        >
-                          CM Queue
-                        </button>
-                      ) : (
-                        <button 
-                          onClick={handleVerifyDocuments}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
-                        >
-                          Verify Documents
-                        </button>
-                      )
-                    ) : (
-                      <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Back Button - Bottom Left (for dashboard) */}
-      <button
-        onClick={() => {/* Add navigation logic if needed */}}
-        className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
-        style={{ display: 'none' }} // Hidden on dashboard as it's the main page
-      >
-        <ArrowLeft size={16} />
-        <span>Back</span>
-      </button>
-
-      {/* Verify Documents Popup */}
-      {showVerifyPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            {/* Popup Header */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <div>
-                <h2 className="text-2xl font-bold text-red-600">Document Verification</h2>
-                <p className="text-gray-500 mt-1">Vishnu Packwell Pvt Ltd - APP005</p>
-              </div>
-              <button
-                onClick={closeVerifyPopup}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Document Status */}
-            <div className="p-6">
-              <div className="mb-6">
-                <div className="flex items-center space-x-2 mb-4">
-                  <CheckCircle className="text-green-600" size={20} />
-                  <span className="text-green-600 font-medium">All documents uploaded successfully</span>
-                </div>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-green-800 text-sm">
-                    <strong>Status:</strong> Ready for verification • <strong>Upload Date:</strong> {new Date().toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-
-              {/* Document Checklist */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Checklist</h3>
-                <div className="space-y-3">
-                  {documentChecklist.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
                       <div className="flex items-center space-x-3">
                         <CheckCircle className="text-green-600" size={18} />
                         <span className="text-gray-900 font-medium">{doc.name}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Uploaded
+            <div className="w-80 bg-white border-l border-gray-200 flex flex-col relative">
                         </span>
-                        <Clock className="text-gray-400" size={14} />
-                        <span className="text-xs text-gray-500">2 min ago</span>
+                <div className="flex-1 flex items-center justify-center p-8">
+                  <button
                       </div>
-                    </div>
+                    className="group bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-2xl px-8 py-4 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                   ))}
-                </div>
+                    <div className="flex flex-col items-center">
+                      <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-3 group-hover:bg-opacity-30 transition-all">
+                        <MessageCircle className="w-6 h-6" />
+                      </div>
+                      <span className="font-semibold text-sm">CAM Assistant</span>
+                      <span className="text-xs opacity-90 mt-1">Click to start chat</span>
+                    </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end space-x-3 mt-8 pt-6 border-t">
-                <button
-                  onClick={closeVerifyPopup}
+                <div className="flex flex-col h-full">
+                  {/* Chat Header */}
+                  <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-red-600 to-red-700 text-white flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                        <MessageCircle className="w-4 h-4" />
+                      </div>
+                      <h3 className="font-semibold">CAM Assistant</h3>
+                    </div>
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                 >
-                  Close
+                      className="text-white hover:bg-white hover:bg-opacity-20 p-1 rounded-full transition-colors"
                 </button>
-                <button 
+                      <X className="w-3 h-3" />
                   onClick={handleApproveDocuments}
-                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
-                >
-                  Approve Documents
+                  className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+
+                  {/* Chat Messages */}
+                  <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                 </button>
-              </div>
+                      <div className="flex items-start">
+                        <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                          <MessageCircle className="w-4 h-4 text-red-600" />
+                        </div>
+                        <div className="bg-white rounded-lg rounded-tl-none p-3 shadow-sm border border-gray-200 max-w-xs">
+                          <p className="text-sm text-gray-700">Hello! I'm your CAM Assistant. How can I help you with this Credit Assessment Memo?</p>
+                        </div>
+                CAM has been generated and sent to the credit manager's email ID.
+              </p>
             </div>
+                        <div key={index} className={`flex items-start ${message.type === 'user' ? 'justify-end' : ''}`}>
+                          {message.type === 'assistant' && (
+                            <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                              <MessageCircle className="w-4 h-4 text-red-600" />
+                            </div>
+                          )}
+                          <div className={`rounded-lg p-3 shadow-sm max-w-xs ${
+                            message.type === 'user' 
+                              ? 'bg-red-600 text-white rounded-tr-none' 
+                              : 'bg-white text-gray-700 border border-gray-200 rounded-tl-none'
+                          }`}>
+                            <p className="text-sm">{message.content}</p>
+                          </div>
+                          {message.type === 'user' && (
+                            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center ml-3 flex-shrink-0">
+                              <User className="w-4 h-4 text-white" />
+                            </div>
+                          )}
+                <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center mr-4">
+                  <span className="text-white font-bold text-sm">ABC</span>
+                </div>
+                <div>
+
+                  {/* Chat Input */}
+                  <div className="p-4 border-t border-gray-200 bg-white">
+                </div>
+              </div>
+            <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+              {/* Status Cards */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                        placeholder="Ask about this CAM..."
+                        className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    <div className="text-sm font-semibold text-green-800">BB+</div>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        className="bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 transition-colors"
+                    <div className="text-sm font-semibold text-blue-800">₹25L</div>
+                        <Send className="w-4 h-4" />
           </div>
-        </div>
-      )}
-    </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                </div>
+                    <div className="text-sm font-semibold text-purple-800">60M</div>
+                  </div>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                    <div className="text-xs font-medium text-orange-700 mb-1">Progress</div>
+                    <div className="text-sm font-semibold text-orange-800">50% Complete</div>
+                  </div>
   );
 }
 
