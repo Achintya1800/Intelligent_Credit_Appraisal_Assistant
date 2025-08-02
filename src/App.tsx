@@ -683,9 +683,53 @@ function App() {
             )}
           </div>
         </div>
+        
+        <>
+          {/* Email Popup */}
+          {showEmailPopup && (
+            <div className="fixed top-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm z-50">
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Mail className="w-4 h-4 text-blue-600" />
+                  <span className="font-medium text-sm">New Email</span>
+                </div>
+                <button
+                  onClick={() => setShowEmailPopup(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">
+                Document verification completed for Application CAM-2024-007
+              </p>
+              <div className="flex space-x-2">
+                <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
+                  View
+                </button>
+                <button
+                  onClick={() => setShowEmailPopup(false)}
+                  className="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      </div>
+    );
+  };
 
-        {/* Email Popup */}
-        {showEmailPopup && (
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {currentScreen === 'dashboard' && renderDashboard()}
+      {currentScreen === 'documents' && renderDocuments()}
+      {currentScreen === 'cm-dashboard' && renderCMDashboard()}
+      {currentScreen === 'cam' && renderCAM()}
+    </div>
+  );
+}
           <div className="fixed top-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm z-50">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center space-x-2">
