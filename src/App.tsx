@@ -477,41 +477,45 @@ function App() {
                 <div className="text-red-600 font-bold text-lg">
                   ADITYA BIRLA<br />
                   <span className="text-red-700">CAPITAL</span>
+        <div className="min-h-screen bg-gray-50">
+          {/* Header */}
+          <div className="bg-white border-b border-gray-200">
+            <div className="px-6 py-4">
+              <div className="flex items-center space-x-4">
+                <div className="bg-red-600 text-white p-2 rounded">
+                  <div className="grid grid-cols-2 gap-1">
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                    <div className="w-2 h-2 bg-white rounded-sm"></div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Header Title and Badges */}
-              <div className="flex-1 mx-8">
-                <h1 className="text-2xl font-bold text-red-600 mb-2">Credit Assessment Memo</h1>
-                <p className="text-sm text-gray-500 mb-3">Create and edit Credit Assessment Memorandum</p>
-                
-                {/* Status Badges */}
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
-                    Risk Rating: BB+
-                  </span>
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                    Limit: ₹25L
-                  </span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
-                    Tenor: 60M
-                  </span>
-                  <span className="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">
-                    50% Complete
-                  </span>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">ADITYA BIRLA</h1>
+                  <p className="text-sm text-red-600 font-semibold">CAPITAL</p>
                 </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-2">
-                <button className="flex items-center space-x-1 px-3 py-2 bg-gray-100 text-gray-700 text-xs rounded hover:bg-gray-200">
-                  <Download size={12} />
-                  <span>Generate PDF</span>
-                </button>
-                <button className="flex items-center space-x-1 px-3 py-2 bg-red-600 text-white text-xs rounded hover:bg-red-700">
-                  <Send size={12} />
-                  <span>Send to Credit</span>
-                </button>
+                  </span>
+            </div>
+            <div className="px-6 pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-red-600">Credit Assessment Memo</h2>
+                  <p className="text-sm text-gray-600 mt-1">Create and edit Credit Assessment Memorandum</p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Risk Rating: BB+</span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Limit: ₹25L</span>
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Tenor: 60M</span>
+                  <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">50% Complete</span>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                    <Download className="w-4 h-4" />
+                    <span>Generate PDF</span>
+                  </button>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    <Send className="w-4 h-4" />
+                    <span>Send to Credit</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
