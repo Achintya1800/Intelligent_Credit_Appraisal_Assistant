@@ -779,7 +779,7 @@ function App() {
 
             {/* Description */}
             <div className="text-center text-gray-600 text-base bg-gray-50 rounded-lg p-6">
-              <p className="leading-relaxed">Takes input from Bank Statements, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats</p>
+              <p className="leading-relaxed">Takes input from Bank Statements, Emails, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats</p>
             </div>
 
             {/* Processing Status */}
