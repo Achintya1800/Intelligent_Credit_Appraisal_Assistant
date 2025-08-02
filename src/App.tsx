@@ -654,6 +654,9 @@ function App() {
                         }`}
                       >
                         <p className="text-sm">{msg.message}</p>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500 mb-2">Application No: CAM-2024-007</p>
+                  </div>
                       </div>
                     </div>
                   ))}
@@ -667,11 +670,11 @@ function App() {
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  </div>
+                  <div className="flex items-center gap-3">
                       placeholder="Ask about this CAM..."
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
                     />
-                    <button
-                      onClick={handleSendMessage}
                       className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-md"
                     >
                       <Send size={16} />
