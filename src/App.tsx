@@ -918,10 +918,6 @@ function App() {
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
               </div>
-              <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-                <Filter size={16} />
-                <span>Filter</span>
-              </button>
             </div>
           </div>
 
