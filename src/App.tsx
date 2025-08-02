@@ -9,6 +9,7 @@ function App() {
   const [camProgress, setCamProgress] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [showEmailPopup, setShowEmailPopup] = useState(false);
+  const [securityDetailsClicked, setSecurityDetailsClicked] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
   const [chatMessages, setChatMessages] = useState([
     { type: 'bot', message: 'Hello! I\'m your CAM Assistant. How can I help you with this Credit Assessment Memo?' }
@@ -229,6 +230,9 @@ function App() {
 
   const handleSectionClick = (section: string) => {
     setSelectedSection(section);
+    if (section === 'security') {
+      setSecurityDetailsClicked(true);
+    }
   };
 
   const getSectionContent = () => {
@@ -598,13 +602,34 @@ function App() {
                   <h4 className="font-semibold text-gray-900">Decision</h4>
                 </div>
                 <div className="flex space-x-4">
-                  <button className="flex-1 bg-green-500 text-white py-3 rounded font-medium hover:bg-green-600">
+                  <button 
+                    disabled={!securityDetailsClicked}
+                    className={`flex-1 py-3 rounded font-medium ${
+                      securityDetailsClicked 
+                        ? 'bg-green-500 text-white hover:bg-green-600' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
                     ✓ Approve
                   </button>
-                  <button className="flex-1 bg-gray-500 text-white py-3 rounded font-medium hover:bg-gray-600">
+                  <button 
+                    disabled={!securityDetailsClicked}
+                    className={`flex-1 py-3 rounded font-medium ${
+                      securityDetailsClicked 
+                        ? 'bg-gray-500 text-white hover:bg-gray-600' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
                     ↩ Send Back
                   </button>
-                  <button className="flex-1 bg-red-500 text-white py-3 rounded font-medium hover:bg-red-600">
+                  <button 
+                    disabled={!securityDetailsClicked}
+                    className={`flex-1 py-3 rounded font-medium ${
+                      securityDetailsClicked 
+                        ? 'bg-red-500 text-white hover:bg-red-600' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
                     ✗ Reject
                   </button>
                 </div>
