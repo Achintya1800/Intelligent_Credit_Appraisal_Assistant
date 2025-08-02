@@ -771,6 +771,7 @@ function App() {
             )}
           </div>
         </div>
+        ,
 
         {/* Email Popup */}
         {showEmailPopup && (
