@@ -477,24 +477,8 @@ function App() {
                 <div className="text-red-600 font-bold text-lg">
                   ADITYA BIRLA<br />
                   <span className="text-red-700">CAPITAL</span>
-        <div className="min-h-screen bg-gray-50">
-          {/* Header */}
-          <div className="bg-white border-b border-gray-200">
-            <div className="px-6 py-4">
-              <div className="flex items-center space-x-4">
-                <div className="bg-red-600 text-white p-2 rounded">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">ADITYA BIRLA</h1>
-                  <p className="text-sm text-red-600 font-semibold">CAPITAL</p>
-                </div>
-                  </span>
+              </div>
             </div>
             <div className="px-6 pb-4">
               <div className="flex items-center justify-between">
