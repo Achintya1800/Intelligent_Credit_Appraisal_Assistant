@@ -974,7 +974,6 @@ function App() {
                       </button>
                     </td>
                   </tr>
-                    </td>
                   </tr>
                 ))}
               </tbody>
