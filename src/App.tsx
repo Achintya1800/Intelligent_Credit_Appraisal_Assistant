@@ -974,7 +974,7 @@ function App() {
                   <td className="px-6 py-4 text-sm text-gray-900">Received New Application</td>
                   <td className="px-6 py-4">
                     <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium">
-                      <span onClick={handleGenerateCAM}>Generate CAM</span>
+                      <span onClick={handleGenerateCAM}>Generate Basic CAM</span>
                     </button>
                   </td>
                 </tr>
