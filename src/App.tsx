@@ -962,6 +962,7 @@ function App() {
                         {app.program}
                       </span>
                     </div>
+                    </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
                     <td className="px-6 py-4">
