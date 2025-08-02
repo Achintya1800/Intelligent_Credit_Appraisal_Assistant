@@ -689,7 +689,7 @@ function App() {
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-sm">New Email</span>
+                <span className="font-medium text-sm">CAM Generate Successfully </span>
               </div>
               <button
                 onClick={() => setShowEmailPopup(false)}
@@ -699,7 +699,7 @@ function App() {
               </button>
             </div>
             <p className="text-sm text-gray-600 mb-3">
-              Document verification completed for Application CAM-2024-007
+              CAM has been generated and sent to the credit manager's email id.
             </p>
             <div className="flex space-x-2">
               <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
