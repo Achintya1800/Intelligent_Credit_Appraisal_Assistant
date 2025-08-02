@@ -577,14 +577,11 @@ function App() {
                   <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
                     50% Complete
                   </span>
-                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors ml-auto">
-                    <Download className="w-4 h-4" />
-                    <span>Generate PDF</span>
-                  </button>
-                  <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                    <Send className="w-4 h-4" />
-                    <span>Send to Credit</span>
-                  </button>
+                </div>
+                <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                  <Download className="w-4 h-4" />
+                  <span>Generate PDF</span>
+                </button>
                 </div>
               </div>
 
