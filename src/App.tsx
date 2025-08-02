@@ -14,6 +14,7 @@ function App() {
     { type: 'bot', message: 'Hello! I\'m your CAM Assistant. How can I help you with this Credit Assessment Memo?' }
   ]);
   const [chatInput, setChatInput] = useState('');
+  const [selectedSection, setSelectedSection] = useState('executive');
   const [applications, setApplications] = useState([
     {
       id: 'APP001',
@@ -226,6 +227,236 @@ function App() {
     setShowChatbot(!showChatbot);
   };
 
+  const handleSectionClick = (section: string) => {
+    setSelectedSection(section);
+  };
+
+  const getSectionContent = () => {
+    switch (selectedSection) {
+      case 'executive':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
+              Executive Summary
+            </h3>
+            <div className="space-y-4">
+              <p className="text-gray-700">
+                <strong>Applicant:</strong> Vishnu Packwell Private Limited is a private limited company engaged in manufacturing of packaging materials and corrugated boxes.
+              </p>
+              <p className="text-gray-700">
+                <strong>Business Overview:</strong> The company has been in operation since 2017 and has established a strong presence in the packaging industry with consistent growth in revenue and profitability.
+              </p>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-800 mb-2">Key Strengths:</h4>
+                <ul className="list-disc list-inside text-green-700 space-y-1">
+                  <li>Experienced management team</li>
+                  <li>Diversified customer base</li>
+                  <li>Strong financial performance</li>
+                  <li>Good market position</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+      case 'applicant':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
+              Applicant Profile
+            </h3>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div>
+                  <span className="font-medium text-gray-700">Legal Name of Business:</span>
+                  <p className="text-gray-900">Vishnu Packwell Private Limited</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Date of Incorporation:</span>
+                  <p className="text-gray-900">18/09/2017</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Constitution:</span>
+                  <p className="text-gray-900">Private Limited Company</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <span className="font-medium text-gray-700">GST Number:</span>
+                  <p className="text-gray-900">09*******121</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Udyam Number:</span>
+                  <p className="text-gray-900">UDYAM-DL-06-0023962</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Mobile Number:</span>
+                  <p className="text-gray-900">98*****231</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'financial':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
+              Financial Analysis
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 px-4 py-2 text-left">Particulars</th>
+                    <th className="border border-gray-300 px-4 py-2 text-right">FY 2022-23</th>
+                    <th className="border border-gray-300 px-4 py-2 text-right">FY 2021-22</th>
+                    <th className="border border-gray-300 px-4 py-2 text-right">FY 2020-21</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-medium">Total Income</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹45.2 Cr</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹38.7 Cr</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹32.1 Cr</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-medium">Net Profit</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹3.8 Cr</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹3.2 Cr</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹2.7 Cr</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-medium">Net Worth</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹18.5 Cr</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹15.2 Cr</td>
+                    <td className="border border-gray-300 px-4 py-2 text-right">₹12.8 Cr</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      case 'risk':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
+              Risk Assessment
+            </h3>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Risk Metrics</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">DSCR:</span>
+                    <span className="font-medium text-green-600">2.1x</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">LTV:</span>
+                    <span className="font-medium text-blue-600">55%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Probability of Default:</span>
+                    <span className="font-medium text-orange-600">2.3%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Risk Factors</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• Industry cyclicality</li>
+                  <li>• Raw material price volatility</li>
+                  <li>• Competition from organized players</li>
+                  <li>• Working capital requirements</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+      case 'security':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
+              Security Details
+            </h3>
+            <div className="space-y-4">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-semibold text-green-800 mb-2">Primary Security</h4>
+                <p className="text-green-700">First charge on all current assets of the company including stock, book debts, and other movable assets.</p>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Collateral Security</h4>
+                <p className="text-blue-700">Mortgage of industrial property located at Sector-80, Gautambudha Nagar, Uttar Pradesh valued at ₹45 Lakhs.</p>
+              </div>
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <h4 className="font-semibold text-purple-800 mb-2">Personal Guarantee</h4>
+                <p className="text-purple-700">Personal guarantee of promoters - Mr. Ankit Babbar and Mrs. Ritu Babbar.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 'recommendation':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
+              Recommendation
+            </h3>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h4 className="font-semibold text-green-800 mb-4">Credit Recommendation: APPROVED</h4>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="font-medium text-gray-700">Facility Type:</span>
+                    <p className="text-gray-900">Term Loan</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Amount:</span>
+                    <p className="text-gray-900">₹35,00,000</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Interest Rate:</span>
+                    <p className="text-gray-900">12.5% p.a.</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Tenure:</span>
+                    <p className="text-gray-900">60 months</p>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <span className="font-medium text-gray-700">Conditions:</span>
+                  <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
+                    <li>Quarterly financial statements to be submitted</li>
+                    <li>Insurance coverage to be maintained</li>
+                    <li>No additional borrowings without consent</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const getSectionComments = () => {
+    switch (selectedSection) {
+      case 'executive':
+        return "Overall assessment shows strong business fundamentals with consistent growth trajectory.";
+      case 'applicant':
+        return "Company profile indicates well-established business with proper documentation and compliance.";
+      case 'financial':
+        return "Financial performance shows healthy growth with improving profitability margins.";
+      case 'risk':
+        return "Risk assessment indicates manageable risk profile with adequate mitigation measures.";
+      case 'security':
+        return "Security structure provides adequate coverage with multiple layers of protection.";
+      case 'recommendation':
+        return "Recommended for approval based on comprehensive analysis and risk assessment.";
+      default:
+        return "Add your comments for this section...";
+    }
+  };
+
   // CAM Output Screen
   if (currentScreen === 'camOutput') {
     return (
@@ -233,7 +464,7 @@ function App() {
         {/* Header with Logo */}
         <div className="bg-white shadow-sm border-b">
           <div className="px-6 py-4">
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
                   <div className="grid grid-cols-2 gap-1">
@@ -248,37 +479,31 @@ function App() {
                   <span className="text-red-700">CAPITAL</span>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex h-[calc(100vh-80px)]">
-          {/* Left Sidebar */}
-          <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-            {/* CAM Header */}
-            <div className="p-6 border-b border-gray-200">
-              <h1 className="text-xl font-bold text-red-600 mb-2">Credit Assessment Memo</h1>
-              <p className="text-sm text-gray-500">Create and edit Credit Assessment Memorandum</p>
               
-              {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
-                  Risk Rating: BB+
-                </span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                  Limit: ₹25L
-                </span>
-                <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
-                  Tenor: 60M
-                </span>
-                <span className="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">
-                  50% Complete
-                </span>
+              {/* Header Title and Badges */}
+              <div className="flex-1 mx-8">
+                <h1 className="text-2xl font-bold text-red-600 mb-2">Credit Assessment Memo</h1>
+                <p className="text-sm text-gray-500 mb-3">Create and edit Credit Assessment Memorandum</p>
+                
+                {/* Status Badges */}
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                    Risk Rating: BB+
+                  </span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                    Limit: ₹25L
+                  </span>
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+                    Tenor: 60M
+                  </span>
+                  <span className="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">
+                    50% Complete
+                  </span>
+                </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2 mt-4">
+              <div className="flex gap-2">
                 <button className="flex items-center space-x-1 px-3 py-2 bg-gray-100 text-gray-700 text-xs rounded hover:bg-gray-200">
                   <Download size={12} />
                   <span>Generate PDF</span>
@@ -289,129 +514,190 @@ function App() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
 
+        {/* Main Content */}
+        <div className="flex h-[calc(100vh-80px)]">
+          {/* Left Sidebar */}
+          <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
             {/* Document Outline */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-4">
+            <div className="p-4 border-b border-gray-200">
+              <div>
                 <h3 className="font-semibold text-gray-900 mb-3">Document Outline</h3>
                 
                 {/* Navigation Items */}
                 <div className="space-y-1">
-                  <div className="bg-red-600 text-white px-3 py-2 rounded text-sm font-medium">
+                  <div 
+                    onClick={() => handleSectionClick('executive')}
+                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
+                      selectedSection === 'executive' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     📋 Executive Summary
                   </div>
-                  <div className="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <div 
+                    onClick={() => handleSectionClick('applicant')}
+                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
+                      selectedSection === 'applicant' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     👤 Applicant Profile
                   </div>
-                  <div className="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <div 
+                    onClick={() => handleSectionClick('financial')}
+                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
+                      selectedSection === 'financial' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     📊 Financial Analysis
                   </div>
-                  <div className="bg-red-600 text-white px-3 py-2 rounded text-sm font-medium">
+                  <div 
+                    onClick={() => handleSectionClick('risk')}
+                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
+                      selectedSection === 'risk' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     ⚠️ Risk Assessment
                   </div>
-                  <div className="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <div 
+                    onClick={() => handleSectionClick('security')}
+                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
+                      selectedSection === 'security' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     🔒 Security Details
                   </div>
-                  <div className="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <div 
+                    onClick={() => handleSectionClick('recommendation')}
+                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
+                      selectedSection === 'recommendation' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     💡 Recommendation
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* Decision Section */}
-                <div className="mt-6">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                    <span className="mr-2">👤</span>
-                    Decision
-                  </h4>
-                  
-                  <div className="space-y-2">
-                    <button className="w-full bg-green-500 text-white py-2 rounded text-sm font-medium hover:bg-green-600">
-                      ✓ Approve
-                    </button>
-                    <button className="w-full bg-gray-500 text-white py-2 rounded text-sm font-medium hover:bg-gray-600">
-                      ↩ Send Back
-                    </button>
-                    <button className="w-full bg-red-500 text-white py-2 rounded text-sm font-medium hover:bg-red-600">
-                      ✗ Reject
-                    </button>
-                  </div>
-                </div>
-
-                {/* Comments */}
-                <div className="mt-6">
-                  <h4 className="font-semibold text-gray-900 mb-2">Comments</h4>
-                  <textarea 
-                    className="w-full h-20 p-2 border border-gray-300 rounded text-sm resize-none"
-                    placeholder="Add your comments..."
-                  ></textarea>
-                </div>
-
-                {/* Key Metrics */}
-                <div className="mt-6">
-                  <h4 className="font-semibold text-gray-900 mb-3">Key Metrics</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">DSCR:</span>
-                      <span className="font-medium text-green-600">2.1x</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">LTV:</span>
-                      <span className="font-medium text-blue-600">55%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Probability of Default:</span>
-                      <span className="font-medium text-orange-600">2.3%</span>
-                    </div>
-                  </div>
-                </div>
+            {/* Comments */}
+            <div className="p-4">
+              <h4 className="font-semibold text-gray-900 mb-2">Comments</h4>
+              <div className="bg-gray-50 p-3 rounded border text-sm text-gray-700">
+                {getSectionComments()}
               </div>
             </div>
           </div>
 
           {/* Main Document Viewer */}
           <div className="flex-1 bg-white overflow-hidden">
-            <div className="h-full overflow-y-auto p-8">
-              {/* CAM Document Content */}
-              <div className="max-w-4xl mx-auto">
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-                  {/* Document Header */}
-                  <div className="border-b border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h2>
-                      <span className="text-sm text-gray-500">Application No: CAM-2024-007</span>
-                    </div>
-                  </div>
+            <div className="h-full flex flex-col">
+              {/* Document Header */}
+              <div className="border-b border-gray-200 p-6 bg-white">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h2>
+                  <span className="text-sm text-gray-500">Application No: CAM-2024-007</span>
+                </div>
+              </div>
 
-                  {/* Document Content */}
-                  <div className="p-6 space-y-8">
-                    {/* Section 1: Borrower's Profile */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 bg-blue-50 p-3 rounded">
-                        SECTION 1: Borrower's Profile
-                      </h3>
-                      <div className="grid grid-cols-2 gap-6">
-                        <div>
-                          <div className="space-y-3">
-                            <div>
-                              <span className="font-medium text-gray-700">Legal Name of Business:</span>
-                              <p className="text-gray-900">Vishnu Packwell Private Limited</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="space-y-3">
-                            <div>
-                              <span className="font-medium text-gray-700">Date of Incorporation:</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                {getSectionContent()}
+              </div>
+
+              {/* Decision Buttons at Bottom */}
+              <div className="border-t border-gray-200 p-6 bg-white">
+                <div className="flex items-center space-x-2 mb-4">
+                  <span className="mr-2">👤</span>
+                  <h4 className="font-semibold text-gray-900">Decision</h4>
+                </div>
+                <div className="flex space-x-4">
+                  <button className="flex-1 bg-green-500 text-white py-3 rounded font-medium hover:bg-green-600">
+                    ✓ Approve
+                  </button>
+                  <button className="flex-1 bg-gray-500 text-white py-3 rounded font-medium hover:bg-gray-600">
+                    ↩ Send Back
+                  </button>
+                  <button className="flex-1 bg-red-500 text-white py-3 rounded font-medium hover:bg-red-600">
+                    ✗ Reject
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Right Sidebar - Chatbot Area */}
+          <div className="w-80 bg-gray-50 border-l border-gray-200 flex flex-col items-center justify-center relative">
+            {!showChatbot ? (
+              <div className="text-center">
+                <button
+                  onClick={toggleChatbot}
+                  className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+                >
+                  <MessageCircle size={32} />
+                </button>
+                <p className="mt-4 text-gray-600 font-medium">CAM Assistant</p>
+                <p className="text-sm text-gray-500">Click to start chat</p>
+              </div>
+            ) : (
+              <div className="w-full h-full flex flex-col">
+                {/* Chatbot Header */}
+                <div className="bg-red-600 text-white p-4 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <MessageCircle size={20} />
+                    <span className="font-medium">CAM Assistant</span>
+                  </div>
+                  <button
+                    onClick={toggleChatbot}
+                    className="text-white hover:text-gray-200"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Chat Messages */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {chatMessages.map((msg, index) => (
+                    <div
+                      key={index}
+                      className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-xs p-3 rounded-lg ${
+                          msg.type === 'user'
+                            ? 'bg-red-600 text-white'
+                            : 'bg-white border border-gray-200 text-gray-800'
+                        }`}
+                      >
+                        <p className="text-sm">{msg.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Chat Input */}
+                <div className="p-4 border-t border-gray-200 bg-white">
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                      placeholder="Ask about this CAM..."
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                    />
+                    <button
+                      onClick={handleSendMessage}
+                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-md"
+                    >
+                      <Send size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
           {/* Right Sidebar - Chatbot Area */}
           <div className="w-80 bg-gray-50 border-l border-gray-200 flex flex-col items-center justify-center relative">
