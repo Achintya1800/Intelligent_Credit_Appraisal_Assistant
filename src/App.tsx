@@ -480,46 +480,6 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="bg-white border-b border-gray-200 px-6 py-4">
-              <div className="flex items-center mb-4">
-                <div className="bg-red-500 text-white p-2 rounded-lg mr-3">
-                  <div className="w-6 h-6 grid grid-cols-2 gap-1">
-                    <div className="bg-white rounded-sm"></div>
-                    <div className="bg-white rounded-sm"></div>
-                    <div className="bg-white rounded-sm"></div>
-                    <div className="bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="font-bold text-red-600">ADITYA BIRLA</div>
-                  <div className="font-bold text-red-600">CAPITAL</div>
-                </div>
-              </div>
-              
-              <div>
-                <h1 className="text-3xl font-bold text-red-600 mb-2">Credit Assessment Memo</h1>
-                <p className="text-gray-600 mb-4">Create and edit Credit Assessment Memorandum</p>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Risk Rating: BB+</span>
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Limit: ₹25L</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Tenor: 60M</span>
-                  <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">50% Complete</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                    <Download className="w-4 h-4" />
-                    <span>Generate PDF</span>
-                  </button>
-                  <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                    <Send className="w-4 h-4" />
-                    <span>Send to Credit</span>
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -603,6 +563,28 @@ function App() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h2>
                   <span className="text-sm text-gray-500">Application No: CAM-2024-007</span>
+                </div>
+                <div className="flex items-center space-x-3 mt-4">
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                    Risk Rating: BB+
+                  </span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    Limit: ₹25L
+                  </span>
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                    Tenor: 60M
+                  </span>
+                  <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
+                    50% Complete
+                  </span>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors ml-auto">
+                    <Download className="w-4 h-4" />
+                    <span>Generate PDF</span>
+                  </button>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <Send className="w-4 h-4" />
+                    <span>Send to Credit</span>
+                  </button>
                 </div>
               </div>
 
