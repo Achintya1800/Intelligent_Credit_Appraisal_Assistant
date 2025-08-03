@@ -38,7 +38,7 @@ interface Document {
   uploadDate: string;
 }
 
-const App: React.Component = () => {
+const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<'dashboard' | 'documents' | 'cm-dashboard' | 'cam-generation'>('dashboard');
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
