@@ -1,1232 +1,216 @@
-import React, { useState } from 'react';
-import { Search, Filter, Plus, Upload, ArrowLeft, X, CheckCircle, Clock, MessageCircle, Send, FileText, Download, Mail } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Building2, 
+  FileText, 
+  Upload, 
+  CheckCircle, 
+  Clock, 
+  AlertCircle, 
+  User, 
+  Search, 
+  Filter, 
+  Plus,
+  ArrowLeft,
+  Download,
+  Eye,
+  MoreVertical,
+  Loader2
+} from 'lucide-react';
 
-function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard'); // 'dashboard', 'newApplication', 'uploading', 'cmDashboard', 'camGeneration', 'camOutput'
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-  const [showVerifyPopup, setShowVerifyPopup] = useState(false);
-  const [isDocumentsApproved, setIsDocumentsApproved] = useState(false);
-  const [camProgress, setCamProgress] = useState(0);
-  const [isCreatingBasicCam, setIsCreatingBasicCam] = useState(false);
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [showEmailPopup, setShowEmailPopup] = useState(false);
-  const [securityDetailsClicked, setSecurityDetailsClicked] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
-  const [chatMessages, setChatMessages] = useState([
-    { type: 'bot', message: 'Hello! I\'m your CAM Assistant. How can I help you with this Credit Assessment Memo?' }
-  ]);
-  const [chatInput, setChatInput] = useState('');
-  const [selectedSection, setSelectedSection] = useState('executive');
-  const [applications, setApplications] = useState([
+interface Application {
+  id: string;
+  customerName: string;
+  applicationId: string;
+  amount: string;
+  status: 'new' | 'in-progress' | 'pending' | 'verified';
+  submittedDate: string;
+  lastUpdated: string;
+  documentsCount: number;
+  verifiedDocuments: number;
+}
+
+interface Document {
+  id: string;
+  name: string;
+  type: string;
+  status: 'pending' | 'verified' | 'rejected';
+  uploadDate: string;
+  size: string;
+}
+
+interface CAMProgress {
+  stage: number;
+  percentage: number;
+  currentStep: string;
+  isComplete: boolean;
+}
+
+const App: React.FC = () => {
+  const [currentScreen, setCurrentScreen] = useState<'rm-dashboard' | 'document-upload' | 'cm-dashboard' | 'cam-generation'>('rm-dashboard');
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [camProgress, setCAMProgress] = useState<CAMProgress>({
+    stage: 0,
+    percentage: 0,
+    currentStep: 'Starting analysis...',
+    isComplete: false
+  });
+  const [securityVerified, setSecurityVerified] = useState(false);
+
+  // Mock data
+  const applications: Application[] = [
     {
-      id: 'APP001',
-      applicant: 'Sharma Industries Pvt Ltd',
+      id: '1',
+      customerName: 'Rajesh Kumar',
+      applicationId: 'ABC001',
       amount: '₹25,00,000',
-      program: 'Term Loan',
-      status: 'In Progress',
-      progress: 85
+      status: 'verified',
+      submittedDate: '2024-01-15',
+      lastUpdated: '2024-01-18',
+      documentsCount: 8,
+      verifiedDocuments: 8
     },
     {
-      id: 'APP002',
-      applicant: 'Tech Solutions Inc',
-      amount: '₹50,00,000',
-      program: 'Working Capital',
-      status: 'Pending',
-      progress: 35
+      id: '2',
+      customerName: 'Priya Sharma',
+      applicationId: 'ABC002',
+      amount: '₹15,00,000',
+      status: 'in-progress',
+      submittedDate: '2024-01-16',
+      lastUpdated: '2024-01-17',
+      documentsCount: 6,
+      verifiedDocuments: 4
     },
     {
-      id: 'APP003',
-      applicant: 'Manufacturing Co.',
-      amount: '₹1,00,00,000',
-      program: 'Equipment Loan',
-      status: 'Verified',
-      progress: 55
+      id: '3',
+      customerName: 'Amit Patel',
+      applicationId: 'ABC003',
+      amount: '₹35,00,000',
+      status: 'pending',
+      submittedDate: '2024-01-14',
+      lastUpdated: '2024-01-16',
+      documentsCount: 7,
+      verifiedDocuments: 3
     },
     {
-      id: 'APP004',
-      applicant: 'Export Business Ltd',
-      amount: '₹75,00,000',
-      program: 'LC Limit',
-      status: 'In Progress',
-      progress: 10
+      id: '4',
+      customerName: 'Sneha Reddy',
+      applicationId: 'ABC004',
+      amount: '₹20,00,000',
+      status: 'new',
+      submittedDate: '2024-01-17',
+      lastUpdated: '2024-01-17',
+      documentsCount: 5,
+      verifiedDocuments: 0
     }
-  ]);
-
-  const documentChecklist = [
-    { name: 'Periods Report', status: 'uploaded' },
-    { name: 'Bank Statements', status: 'uploaded' },
-    { name: 'GST Reports', status: 'uploaded' },
-    { name: 'Shareholding Certificates', status: 'uploaded' },
-    { name: 'Anchor Certificates', status: 'uploaded' },
-    { name: 'BI Reports', status: 'uploaded' },
-    { name: 'Consumer CIBIL', status: 'uploaded' },
-    { name: 'Commercial CIBIL', status: 'uploaded' },
-    { name: 'Udyam Regst Certificate', status: 'uploaded' },
-    { name: 'Audit Reports', status: 'uploaded' }
   ];
 
-  const handleNewApplicationClick = () => {
-    setCurrentScreen('newApplication');
-  };
+  const documents: Document[] = [
+    { id: '1', name: 'Bank Statement - SBI', type: 'PDF', status: 'verified', uploadDate: '2024-01-15', size: '2.4 MB' },
+    { id: '2', name: 'Perfios Report', type: 'XLSX', status: 'verified', uploadDate: '2024-01-15', size: '1.8 MB' },
+    { id: '3', name: 'CIBIL Report - Consumer', type: 'PDF', status: 'verified', uploadDate: '2024-01-16', size: '856 KB' },
+    { id: '4', name: 'CIBIL Report - Commercial', type: 'PDF', status: 'verified', uploadDate: '2024-01-16', size: '1.2 MB' },
+    { id: '5', name: 'GST Filing Report', type: 'PDF', status: 'verified', uploadDate: '2024-01-17', size: '945 KB' },
+    { id: '6', name: 'Shareholding Certificate', type: 'PDF', status: 'verified', uploadDate: '2024-01-17', size: '678 KB' },
+    { id: '7', name: 'Audit Report', type: 'PDF', status: 'verified', uploadDate: '2024-01-18', size: '3.2 MB' },
+    { id: '8', name: 'Email Communication', type: 'MSG', status: 'verified', uploadDate: '2024-01-18', size: '124 KB' }
+  ];
 
-  const handleBackToDashboard = () => {
-    setCurrentScreen('dashboard');
-    setSelectedFiles(null);
-  };
+  // CAM Generation Progress Simulation
+  useEffect(() => {
+    if (currentScreen === 'cam-generation' && !camProgress.isComplete) {
+      const progressSteps = [
+        { stage: 1, percentage: 15, step: 'Reading Bank Statements...' },
+        { stage: 1, percentage: 25, step: 'Processing Perfios Reports...' },
+        { stage: 1, percentage: 35, step: 'Analyzing CIBIL Reports...' },
+        { stage: 1, percentage: 44, step: 'Reading Documents Complete' },
+        { stage: 2, percentage: 48, step: 'Extracting Financial Data...' },
+        { stage: 2, percentage: 52, step: 'Building CAM Structure...' },
+        { stage: 2, percentage: 58, step: 'Basic CAM Complete' },
+        { stage: 3, percentage: 65, step: 'Calculating Financial Ratios...' },
+        { stage: 3, percentage: 75, step: 'Creating Financial Charts...' },
+        { stage: 3, percentage: 82, step: 'Plotting Trends...' },
+        { stage: 3, percentage: 87, step: 'Financial Plotting Complete' },
+        { stage: 4, percentage: 92, step: 'Compiling Final Report...' },
+        { stage: 4, percentage: 97, step: 'Formatting CAM Document...' },
+        { stage: 4, percentage: 100, step: 'CAM Generation Complete!' }
+      ];
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFiles(event.target.files);
+      let currentIndex = 0;
+      const interval = setInterval(() => {
+        if (currentIndex < progressSteps.length) {
+          const currentStep = progressSteps[currentIndex];
+          setCAMProgress({
+            stage: currentStep.stage,
+            percentage: currentStep.percentage,
+            currentStep: currentStep.step,
+            isComplete: currentStep.percentage === 100
+          });
+          currentIndex++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 2000); // Update every 2 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [currentScreen, camProgress.isComplete]);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'new': return 'bg-blue-100 text-blue-800';
+      case 'in-progress': return 'bg-yellow-100 text-yellow-800';
+      case 'pending': return 'bg-orange-100 text-orange-800';
+      case 'verified': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const handleUpload = () => {
-    if (selectedFiles) {
-      setCurrentScreen('uploading');
-      
-      // Simulate upload process
-      setTimeout(() => {
-        // Add new application entry
-        const newApplication = {
-          id: 'APP005',
-          applicant: 'Vishnu Packwell Pvt Ltd',
-          amount: '₹35,00,000',
-          program: 'Term Loan',
-          status: isDocumentsApproved ? 'Verified' : 'New',
-          progress: 0
-        };
-        
-        setApplications(prev => [newApplication, ...prev]);
-        setCurrentScreen('dashboard');
-        setSelectedFiles(null);
-      }, 3000); // 3 second upload simulation
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'new': return <FileText className="w-4 h-4" />;
+      case 'in-progress': return <Clock className="w-4 h-4" />;
+      case 'pending': return <AlertCircle className="w-4 h-4" />;
+      case 'verified': return <CheckCircle className="w-4 h-4" />;
+      default: return <FileText className="w-4 h-4" />;
     }
   };
 
-  const handleVerifyDocuments = () => {
-    setShowVerifyPopup(true);
-  };
+  const filteredApplications = applications.filter(app => {
+    const matchesSearch = app.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         app.applicationId.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
-  const closeVerifyPopup = () => {
-    setShowVerifyPopup(false);
-  };
+  const verifiedApplications = applications.filter(app => app.status === 'verified');
 
-  const handleApproveDocuments = () => {
-    setIsDocumentsApproved(true);
-    setApplications(prev => 
-      prev.map(app => 
-        app.applicant === 'Vishnu Packwell Pvt Ltd' 
-          ? { ...app, status: 'Verified', progress: 100 }
-          : app
-      )
-    );
-    setShowVerifyPopup(false);
-  };
-
-  const handleCMQueue = () => {
-    setCurrentScreen('cmDashboard');
-  };
-
-  const handleBackFromCM = () => {
-    setCurrentScreen('dashboard');
-  };
-
-  const handleGenerateCAM = () => {
-    setCurrentScreen('camGeneration');
-    setCamProgress(0);
-    setCompletedSteps([]);
-    
-    // Smooth progressive loading with different messages
-    let currentProgress = 0;
-    
-    // Step 1: Reading Documents (0% to 44%)
-    const step1Interval = setInterval(() => {
-      currentProgress += 2;
-      setCamProgress(currentProgress);
-      if (currentProgress >= 44) {
-        clearInterval(step1Interval);
-        setCompletedSteps([0]);
-        
-        // Step 2: Building Basic CAM (44% to 58%)
-        const step2Interval = setInterval(() => {
-          currentProgress += 1;
-          setCamProgress(currentProgress);
-          if (currentProgress >= 58) {
-            clearInterval(step2Interval);
-            setCompletedSteps([0, 1]);
-            
-            // Step 3: Financial Plotting (58% to 87%)
-            const step3Interval = setInterval(() => {
-              currentProgress += 1;
-              setCamProgress(currentProgress);
-              if (currentProgress >= 87) {
-                clearInterval(step3Interval);
-                setCompletedSteps([0, 1, 2]);
-                
-                // Step 4: Generating CAM Report (87% to 100%)
-                const step4Interval = setInterval(() => {
-                  currentProgress += 1;
-                  setCamProgress(currentProgress);
-                  if (currentProgress >= 100) {
-                    clearInterval(step4Interval);
-                    setCompletedSteps([0, 1, 2, 3]);
-                  }
-                }, 100);
-              }
-            }, 150);
-          }
-        }, 200);
-      }
-    }, 100);
-
-    // Return to CM Dashboard after completion
-    setTimeout(() => {
-      setCurrentScreen('camOutput');
-      setShowEmailPopup(true);
-    }, 18000); // 18 seconds total
-  };
-
-  const handleCompleteCamGeneration = () => {
-    setIsCreatingBasicCam(true);
-    setTimeout(() => {
-      setIsCreatingBasicCam(false);
-      setCurrentScreen('cmDashboard');
-      // Update the status of the first application to "Basic CAM Generated"
-      setApplications(prev => prev.map((app, index) => 
-        index === 0 ? { ...app, status: 'Basic CAM Generated' } : app
-      ));
-    }, 3000);
-  };
-
-  const resetCamGeneration = () => {
-    setCompletedSteps([]);
-    setCamProgress(0);
-  };
-
-  // Get current status message based on progress
-  const getCurrentStatusMessage = () => {
-    if (camProgress < 22) return "Starting analysis...";
-    if (camProgress < 44) return "Documents collected successfully!";
-    if (camProgress < 58) return "Data fetched and processed!";
-    if (camProgress < 87) return "Financial analysis completed!";
-    if (camProgress < 100) return "Generating CAM... Please wait";
-    return "Complete CAM generated successfully!";
-  };
-
-  const getStatusMessageColor = () => {
-    if (camProgress < 22) return "text-blue-600";
-    if (camProgress < 44) return "text-green-600";
-    if (camProgress < 58) return "text-green-600";
-    if (camProgress < 87) return "text-green-600";
-    if (camProgress < 100) return "text-blue-600";
-    return "text-green-600";
-  };
-
-  const handleSendMessage = () => {
-    if (chatInput.trim()) {
-      setChatMessages(prev => [...prev, { type: 'user', message: chatInput }]);
-      
-      // Simulate bot response
-      setTimeout(() => {
-        setChatMessages(prev => [...prev, { 
-          type: 'bot', 
-          message: 'I understand your query about the CAM. Let me help you with that information.' 
-        }]);
-      }, 1000);
-      
-      setChatInput('');
-    }
-  };
-
-  const closeEmailPopup = () => {
-    setShowEmailPopup(false);
-  };
-
-  const toggleChatbot = () => {
-    setShowChatbot(!showChatbot);
-  };
-
-  const handleSectionClick = (section: string) => {
-    setSelectedSection(section);
-    if (section === 'security') {
-      setSecurityDetailsClicked(true);
-    }
-  };
-
-  const getSectionContent = () => {
-    switch (selectedSection) {
-      case 'executive':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Executive Summary
-            </h3>
-            <div className="space-y-4">
-              <p className="text-gray-700">
-                <strong>Applicant:</strong> Vishnu Packwell Private Limited is a private limited company engaged in manufacturing of packaging materials and corrugated boxes.
-              </p>
-              <p className="text-gray-700">
-                <strong>Business Overview:</strong> The company has been in operation since 2017 and has established a strong presence in the packaging industry with consistent growth in revenue and profitability.
-              </p>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-green-800 mb-2">Key Strengths:</h4>
-                <ul className="list-disc list-inside text-green-700 space-y-1">
-                  <li>Experienced management team</li>
-                  <li>Diversified customer base</li>
-                  <li>Strong financial performance</li>
-                  <li>Good market position</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
-      case 'applicant':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Applicant Profile
-            </h3>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <div>
-                  <span className="font-medium text-gray-700">Legal Name of Business:</span>
-                  <p className="text-gray-900">Vishnu Packwell Private Limited</p>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Date of Incorporation:</span>
-                  <p className="text-gray-900">18/09/2017</p>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Constitution:</span>
-                  <p className="text-gray-900">Private Limited Company</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <span className="font-medium text-gray-700">GST Number:</span>
-                  <p className="text-gray-900">09*******121</p>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Udyam Number:</span>
-                  <p className="text-gray-900">UDYAM-DL-06-0023962</p>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Mobile Number:</span>
-                  <p className="text-gray-900">98*****231</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'financial':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Financial Analysis
-            </h3>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="border border-gray-300 px-4 py-2 text-left">Particulars</th>
-                    <th className="border border-gray-300 px-4 py-2 text-right">FY 2022-23</th>
-                    <th className="border border-gray-300 px-4 py-2 text-right">FY 2021-22</th>
-                    <th className="border border-gray-300 px-4 py-2 text-right">FY 2020-21</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-gray-300 px-4 py-2 font-medium">Total Income</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹45.2 Cr</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹38.7 Cr</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹32.1 Cr</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-300 px-4 py-2 font-medium">Net Profit</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹3.8 Cr</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹3.2 Cr</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹2.7 Cr</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-300 px-4 py-2 font-medium">Net Worth</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹18.5 Cr</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹15.2 Cr</td>
-                    <td className="border border-gray-300 px-4 py-2 text-right">₹12.8 Cr</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-      case 'risk':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Risk Assessment
-            </h3>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3">Risk Metrics</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">DSCR:</span>
-                    <span className="font-medium text-green-600">2.1x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">LTV:</span>
-                    <span className="font-medium text-blue-600">55%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Probability of Default:</span>
-                    <span className="font-medium text-orange-600">2.3%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3">Risk Factors</h4>
-                <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• Industry cyclicality</li>
-                  <li>• Raw material price volatility</li>
-                  <li>• Competition from organized players</li>
-                  <li>• Working capital requirements</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
-      case 'security':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Security Details
-            </h3>
-            <div className="space-y-4">
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-semibold text-green-800 mb-2">Primary Security</h4>
-                <p className="text-green-700">First charge on all current assets of the company including stock, book debts, and other movable assets.</p>
-              </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-800 mb-2">Collateral Security</h4>
-                <p className="text-blue-700">Mortgage of industrial property located at Sector-80, Gautambudha Nagar, Uttar Pradesh valued at ₹45 Lakhs.</p>
-              </div>
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h4 className="font-semibold text-purple-800 mb-2">Personal Guarantee</h4>
-                <p className="text-purple-700">Personal guarantee of promoters - Mr. Ankit Babbar and Mrs. Ritu Babbar.</p>
-              </div>
-            </div>
-          </div>
-        );
-      case 'recommendation':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Recommendation
-            </h3>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h4 className="font-semibold text-green-800 mb-4">Credit Recommendation: APPROVED</h4>
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <span className="font-medium text-gray-700">Facility Type:</span>
-                    <p className="text-gray-900">Term Loan</p>
-                  </div>
-                  <div>
-                    <span className="font-medium text-gray-700">Amount:</span>
-                    <p className="text-gray-900">₹35,00,000</p>
-                  </div>
-                  <div>
-                    <span className="font-medium text-gray-700">Interest Rate:</span>
-                    <p className="text-gray-900">12.5% p.a.</p>
-                  </div>
-                  <div>
-                    <span className="font-medium text-gray-700">Tenure:</span>
-                    <p className="text-gray-900">60 months</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <span className="font-medium text-gray-700">Conditions:</span>
-                  <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
-                    <li>Quarterly financial statements to be submitted</li>
-                    <li>Insurance coverage to be maintained</li>
-                    <li>No additional borrowings without consent</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const getSectionComments = () => {
-    switch (selectedSection) {
-      case 'executive':
-        return "Overall assessment shows strong business fundamentals with consistent growth trajectory.";
-      case 'applicant':
-        return "Company profile indicates well-established business with proper documentation and compliance.";
-      case 'financial':
-        return "Financial performance shows healthy growth with improving profitability margins.";
-      case 'risk':
-        return "Risk assessment indicates manageable risk profile with adequate mitigation measures.";
-      case 'security':
-        return "Security structure provides adequate coverage with multiple layers of protection.";
-      case 'recommendation':
-        return "Recommended for approval based on comprehensive analysis and risk assessment.";
-      default:
-        return "Add your comments for this section...";
-    }
-  };
-
-  // Basic CAM Creation Loading Screen
-  if (isCreatingBasicCam) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Creating a Basic CAM</h2>
-          <p className="text-gray-600">Please wait, generating basic CAM...</p>
-          <div className="w-64 bg-gray-200 rounded-full h-2 mx-auto mt-4">
-            <div className="bg-red-500 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // CAM Output Screen
-  if (currentScreen === 'camOutput') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header with Logo */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex h-[calc(100vh-80px)]">
-          {/* Left Sidebar */}
-          <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-            {/* Document Outline */}
-            <div className="p-4 border-b border-gray-200">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Document Outline</h3>
-                
-                {/* Navigation Items */}
-                <div className="space-y-1">
-                  <div 
-                    onClick={() => handleSectionClick('executive')}
-                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
-                      selectedSection === 'executive' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    📋 Executive Summary
-                  </div>
-                  <div 
-                    onClick={() => handleSectionClick('applicant')}
-                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
-                      selectedSection === 'applicant' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    👤 Applicant Profile
-                  </div>
-                  <div 
-                    onClick={() => handleSectionClick('financial')}
-                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
-                      selectedSection === 'financial' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    📊 Financial Analysis
-                  </div>
-                  <div 
-                    onClick={() => handleSectionClick('risk')}
-                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
-                      selectedSection === 'risk' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    ⚠️ Risk Assessment
-                  </div>
-                  <div 
-                    onClick={() => handleSectionClick('security')}
-                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
-                      selectedSection === 'security' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    🔒 Security Details
-                  </div>
-                  <div 
-                    onClick={() => handleSectionClick('recommendation')}
-                    className={`px-3 py-2 rounded text-sm font-medium cursor-pointer ${
-                      selectedSection === 'recommendation' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    💡 Recommendation
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Comments */}
-            <div className="p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Comments</h4>
-              <div className="bg-gray-50 p-3 rounded border text-sm text-gray-700">
-                {getSectionComments()}
-              </div>
-            </div>
-          </div>
-
-          {/* Main Document Viewer */}
-          <div className="flex-1 bg-white overflow-hidden">
-            <div className="h-full flex flex-col">
-              {/* Document Header */}
-              <div className="border-b border-gray-200 p-6 bg-white">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">Credit Assessment Memo</h2>
-                  <span className="text-sm text-gray-500">Application No: CAM-2024-007</span>
-                </div>
-                <div className="flex items-center space-x-3 mt-4 items-center justify-between">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                      Risk Rating: BB+
-                    </span>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                      Limit: ₹25L
-                    </span>
-                    <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                      Tenor: 60M
-                    </span>
-                    <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
-                      50% Complete
-                    </span>
-                  </div>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                    <Download className="w-4 h-4" />
-                    Generate PDF
-                  </button>
-                </div>
-              </div>
-
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto p-6">
-                {getSectionContent()}
-              </div>
-
-              {/* Decision Buttons at Bottom */}
-              <div className="border-t border-gray-200 p-6 bg-white">
-                <div className="flex items-center space-x-2 mb-4">
-                  <span className="mr-2">👤</span>
-                  <h4 className="font-semibold text-gray-900">Decision</h4>
-                </div>
-                <div className="flex space-x-4">
-                  <button 
-                    disabled={!securityDetailsClicked}
-                    className={`flex-1 py-3 rounded font-medium ${
-                      securityDetailsClicked 
-                        ? 'bg-green-500 text-white hover:bg-green-600' 
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    ✓ Approve
-                  </button>
-                  <button 
-                    disabled={!securityDetailsClicked}
-                    className={`flex-1 py-3 rounded font-medium ${
-                      securityDetailsClicked 
-                        ? 'bg-gray-500 text-white hover:bg-gray-600' 
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    ↩ Send Back
-                  </button>
-                  <button 
-                    disabled={!securityDetailsClicked}
-                    className={`flex-1 py-3 rounded font-medium ${
-                      securityDetailsClicked 
-                        ? 'bg-red-500 text-white hover:bg-red-600' 
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    ✗ Reject
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Sidebar - Chatbot Area */}
-          <div className="w-80 bg-gray-50 border-l border-gray-200 flex flex-col items-center justify-center relative">
-            {!showChatbot ? (
-              <div className="text-center">
-                <button
-                  onClick={toggleChatbot}
-                  className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
-                >
-                  <MessageCircle size={32} />
-                </button>
-                <p className="mt-4 text-gray-600 font-medium">CAM Assistant</p>
-                <p className="text-sm text-gray-500">Click to start chat</p>
-              </div>
-            ) : (
-              <div className="w-full h-full flex flex-col">
-                {/* Chatbot Header */}
-                <div className="bg-red-600 text-white p-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <MessageCircle size={20} />
-                    <span className="font-medium">CAM Assistant</span>
-                  </div>
-                  <button
-                    onClick={toggleChatbot}
-                    className="text-white hover:text-gray-200"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                {/* Chat Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {chatMessages.map((msg, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-xs p-3 rounded-lg ${
-                          msg.type === 'user'
-                            ? 'bg-red-600 text-white'
-                            : 'bg-white border border-gray-200 text-gray-800'
-                        }`}
-                      >
-                        <p className="text-sm">{msg.message}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Chat Input */}
-                <div className="p-4 border-t border-gray-200 bg-white">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="text"
-                      value={chatInput}
-                      onChange={(e) => setChatInput(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                      placeholder="Ask about this CAM..."
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
-                    />
-                    <button
-                      onClick={handleSendMessage}
-                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-md"
-                    >
-                      <Send size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        {/* Email Popup */}
-        {showEmailPopup && (
-          <div className="fixed top-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm z-50">
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-sm">CAM Generate Successfully </span>
-              </div>
-              <button
-                onClick={() => setShowEmailPopup(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 mb-3">
-              CAM has been generated and sent to the credit manager's email id.
-            </p>
-            <div className="flex space-x-2">
-              <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
-                View
-              </button>
-              <button
-                onClick={() => setShowEmailPopup(false)}
-                className="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300"
-              >
-                Dismiss
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Upload Animation Screen
-  if (currentScreen === 'uploading') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header with Logo */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Upload Animation Content */}
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-          <div className="text-center">
-            <div className="mb-8">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-600 mx-auto"></div>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Uploading Documents</h2>
-            <p className="text-gray-600 mb-4">Please wait, documents are uploading...</p>
-            <div className="w-64 bg-gray-200 rounded-full h-2 mx-auto">
-              <div className="bg-red-600 h-2 rounded-full animate-pulse" style={{ width: '70%' }}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // CAM Generation Screen
-  if (currentScreen === 'camGeneration') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header with Logo */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CAM Generation Content */}
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 bg-gradient-to-br from-gray-50 to-gray-100">
-          <div className="max-w-5xl w-full bg-white rounded-2xl shadow-2xl p-12 border border-gray-100">
-            {/* Header */}
-            <div className="flex items-center space-x-6 mb-12">
-              <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">ABC</span>
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Automated Credit Assessment Memo Solution</h1>
-                <p className="text-lg text-gray-600">Fully automated Agentic AI + Gen AI based CAM ++ Generation Solution</p>
-              </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="mb-12">
-              <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
-                <div 
-                  className="bg-gradient-to-r from-red-500 to-red-600 h-4 rounded-full transition-all duration-300 ease-out shadow-sm" 
-                  style={{ width: `${camProgress}%` }}
-                ></div>
-              </div>
-              <div className="text-center mt-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-3">{camProgress}% Complete</h2>
-                <p className={`font-semibold text-lg ${getStatusMessageColor()}`}>
-                  {getCurrentStatusMessage()}
-                </p>
-              </div>
-            </div>
-
-            {/* Success Icon - Only show when complete */}
-            {camProgress === 100 && (
-              <div className="text-center mb-12 animate-fade-in">
-                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg animate-bounce">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-3xl font-bold text-green-600 mb-3">CAM Generation Complete!</h3>
-                <p className="text-gray-600 text-lg">Redirecting to CAM Composer...</p>
-              </div>
-            )}
-
-            {/* Process Steps */}
-            <div className="grid grid-cols-4 gap-8 mb-12">
-              {['Reading Documents', 'Building Basic CAM', 'Financial Plotting', 'Generating CAM Report'].map((step, index) => (
-                <div key={index} className="text-center transform transition-all duration-500 hover:scale-105">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
-                    completedSteps.includes(index) 
-                      ? 'bg-gradient-to-br from-green-500 to-green-600 shadow-lg' 
-                      : 'bg-gray-300'
-                  }`}>
-                    {completedSteps.includes(index) ? (
-                      <svg className="w-6 h-6 text-white animate-scale-in" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : (
-                      <span className="text-gray-600 font-bold text-sm">{index + 1}</span>
-                    )}
-                  </div>
-                  <h4 className={`font-bold mb-2 transition-colors duration-500 text-sm ${
-                    completedSteps.includes(index) ? 'text-green-600' : 'text-gray-500'
-                  }`}>{step}</h4>
-                </div>
-              ))}
-            </div>
-
-            {/* Description */}
-            <div className="text-center text-gray-600 text-base bg-gray-50 rounded-lg p-6">
-              <p className="leading-relaxed">Takes input from Bank Statements, Emails, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats</p>
-            </div>
-
-            {/* Processing Status */}
-            <div className="text-right mt-8">
-              <p className="text-gray-500 text-sm">
-                {camProgress === 100 ? 'Processing complete!' : 'Processing... Please wait'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // CM Dashboard Screen
-  if (currentScreen === 'cmDashboard') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header with Logo */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="px-6 py-6">
-          {/* Dashboard Header */}
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-red-600 mb-2">CM Dashboard</h1>
-              <p className="text-gray-500">Review and process credit applications</p>
-            </div>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="mb-6">
-            <div className="flex items-center space-x-4">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search Applications....."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Applications Table */}
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Application ID</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Applicant</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Amount</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Program</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Status</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">APP005</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">Vishnu Packwell Pvt Ltd</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">₹35,00,000</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      Term Loan
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">Received New Application</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => setCurrentScreen('camGeneration')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Generate Basic CAM
-                      </button>
-                      <button 
-                        disabled={true}
-                        className="bg-gray-300 text-gray-500 cursor-not-allowed px-4 py-2 rounded-lg transition-colors"
-                      >
-                        Send to CPA
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                {applications.slice(0, 4).map((app) => (
-                  <tr key={app.id}>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{app.id}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{app.applicant}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{app.amount}</td>
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        {app.program}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {app.status === 'Received New Application' ? (
-                        <div className="flex gap-2">
-                          <button 
-                            onClick={() => setCurrentScreen('camGeneration')}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                          >
-                            Generate Basic CAM
-                          </button>
-                          <button 
-                            disabled={app.status !== 'Basic CAM Generated'}
-                            className={`px-4 py-2 rounded-lg transition-colors ${
-                              app.status === 'Basic CAM Generated' 
-                                ? 'bg-green-600 text-white hover:bg-green-700' 
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                            }`}
-                          >
-                            Send to CPA
-                          </button>
-                        </div>
-                      ) : app.status === 'Basic CAM Generated' ? (
-                        <div className="flex gap-2">
-                          <button 
-                            disabled
-                            className="bg-gray-300 text-gray-500 px-4 py-2 rounded-lg cursor-not-allowed"
-                          >
-                            Generate Basic CAM
-                          </button>
-                          <button 
-                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-                          >
-                            Send to CPA
-                          </button>
-                        </div>
-                      ) : (
-                        <button className="text-blue-600 hover:text-blue-800 transition-colors">
-                          View
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Back Button - Bottom Left */}
-        <button
-          onClick={handleBackFromCM}
-          className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
-        >
-          <ArrowLeft size={16} />
-          <span>Back</span>
-        </button>
-      </div>
-    );
-  }
-
-  // New Application Screen
-  if (currentScreen === 'newApplication') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header with Logo */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* New Application Content */}
-        <div className="px-6 py-6 flex justify-center relative">
-          <div className="max-w-4xl w-full">
-            <div className="bg-white rounded-lg border border-gray-300 p-8">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-red-600 mb-2">Intelligent Credit Appraisal Assistant</h1>
-                <p className="text-gray-500">Upload your documents to begin the intelligent credit assessment process</p>
-              </div>
-
-              {/* Upload Area */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 mb-8 text-center">
-                <div className="mb-4">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                </div>
-                <p className="text-gray-500 mb-4">Drag your files here or click to browse</p>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  id="file-upload"
-                />
-                <label
-                  htmlFor="file-upload"
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md cursor-pointer inline-block"
-                >
-                  Choose Files
-                </label>
-                {selectedFiles && (
-                  <div className="mt-4">
-                    <p className="text-sm text-gray-600">
-                      {selectedFiles.length} file(s) selected
-                    </p>
-                    <button
-                      onClick={handleUpload}
-                      className="mt-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md"
-                    >
-                      Upload
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Process Steps */}
-              <div className="flex justify-center space-x-8 mb-8">
-                {/* Step 1 */}
-                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
-                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
-                    1
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Upload Docs</h3>
-                  <p className="text-sm text-gray-500">Drag & drop documents</p>
-                </div>
-
-                {/* Step 2 */}
-                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
-                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
-                    2
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">AI Analysis</h3>
-                  <p className="text-sm text-gray-500">Intelligent Processing</p>
-                </div>
-
-                {/* Step 3 */}
-                <div className="text-center border border-gray-300 rounded-lg p-6 w-48">
-                  <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold">
-                    3
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Generate CAM</h3>
-                  <p className="text-sm text-gray-500">Automated reports</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Back Button - Bottom Left */}
-          <button
-            onClick={handleBackToDashboard}
-            className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
-          >
-            <ArrowLeft size={16} />
-            <span>Back</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Dashboard Screen
-  return (
+  const renderRMDashboard = () => (
     <div className="min-h-screen bg-gray-50">
-      {/* Header with Logo */}
+      {/* Header */}
       <div className="bg-white shadow-sm border-b">
-        <div className="px-6 py-4">
-          <div className="flex items-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                <div className="grid grid-cols-2 gap-1">
-                  <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                  <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                  <div className="w-2 h-2 bg-white rounded-sm"></div>
-                </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <div className="bg-red-600 p-2 rounded-lg">
+                <Building2 className="w-6 h-6 text-white" />
               </div>
-              <div className="text-red-600 font-bold text-lg">
-                ADITYA BIRLA<br />
-                <span className="text-red-700">CAPITAL</span>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">ADITYA BIRLA CAPITAL</h1>
+                <p className="text-sm text-gray-500">Relationship Manager Dashboard</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentScreen('cm-dashboard')}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Switch to CM Dashboard
+              </button>
+              <div className="flex items-center space-x-2">
+                <User className="w-5 h-5 text-gray-400" />
+                <span className="text-sm text-gray-700">John Doe</span>
               </div>
             </div>
           </div>
@@ -1234,179 +218,618 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 py-6">
-        {/* Dashboard Header */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-red-600 mb-2">Relationship Manager Dashboard</h1>
-            <p className="text-gray-500">Manage credit applications and track progress</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <FileText className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Applications</p>
+                <p className="text-2xl font-semibold text-gray-900">{applications.length}</p>
+              </div>
+            </div>
           </div>
-          <button 
-            onClick={handleNewApplicationClick}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center space-x-2"
-          >
-            <Plus size={16} />
-            <span>New Application</span>
-          </button>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-yellow-100 p-3 rounded-lg">
+                <Clock className="w-6 h-6 text-yellow-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">In Progress</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {applications.filter(app => app.status === 'in-progress').length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-green-100 p-3 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Verified</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {applications.filter(app => app.status === 'verified').length}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-orange-100 p-3 rounded-lg">
+                <AlertCircle className="w-6 h-6 text-orange-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {applications.filter(app => app.status === 'pending').length}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-6">
-          <div className="flex items-center space-x-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search Applications....."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Search by customer name or application ID..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-              <Filter size={16} />
-              <span>Filter</span>
-            </button>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <select
+                  className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="all">All Status</option>
+                  <option value="new">New</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="pending">Pending</option>
+                  <option value="verified">Verified</option>
+                </select>
+              </div>
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                <Plus className="w-4 h-4" />
+                <span>New Application</span>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Applications Table */}
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Application ID</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Applicant</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Amount</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Program</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Status</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Progress</th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {applications.map((app) => (
-                <tr key={app.id}>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{app.id}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{app.applicant}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{app.amount}</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      {app.program}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{app.status}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div className="bg-red-600 h-2 rounded-full" style={{ width: `${app.progress}%` }}></div>
-                      </div>
-                      <span className="text-xs text-gray-500">{app.progress}%</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {app.applicant === 'Vishnu Packwell Pvt Ltd' ? (
-                      app.status === 'Verified' ? (
-                        <button 
-                          onClick={handleCMQueue}
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium"
-                        >
-                          CM Queue
-                        </button>
-                      ) : (
-                        <button 
-                          onClick={handleVerifyDocuments}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
-                        >
-                          Verify Documents
-                        </button>
-                      )
-                    ) : (
-                      <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View</button>
-                    )}
-                  </td>
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">Credit Applications</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Application ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Documents
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Last Updated
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredApplications.map((application) => (
+                  <tr key={application.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{application.customerName}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{application.applicationId}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{application.amount}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(application.status)}`}>
+                        {getStatusIcon(application.status)}
+                        <span className="ml-1 capitalize">{application.status.replace('-', ' ')}</span>
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {application.verifiedDocuments}/{application.documentsCount} verified
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full" 
+                          style={{ width: `${(application.verifiedDocuments / application.documentsCount) * 100}%` }}
+                        ></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {application.lastUpdated}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center space-x-2">
+                        <button 
+                          onClick={() => {
+                            setSelectedApplication(application);
+                            setCurrentScreen('document-upload');
+                          }}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button className="text-gray-400 hover:text-gray-600">
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+    </div>
+  );
 
-      {/* Back Button - Bottom Left (for dashboard) */}
-      <button
-        onClick={() => {/* Add navigation logic if needed */}}
-        className="fixed bottom-6 left-6 flex items-center space-x-2 text-gray-600 hover:text-gray-800 z-10"
-        style={{ display: 'none' }} // Hidden on dashboard as it's the main page
-      >
-        <ArrowLeft size={16} />
-        <span>Back</span>
-      </button>
-
-      {/* Verify Documents Popup */}
-      {showVerifyPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            {/* Popup Header */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <div>
-                <h2 className="text-2xl font-bold text-red-600">Document Verification</h2>
-                <p className="text-gray-500 mt-1">Vishnu Packwell Pvt Ltd - APP005</p>
-              </div>
-              <button
-                onClick={closeVerifyPopup}
-                className="text-gray-400 hover:text-gray-600"
+  const renderDocumentUpload = () => (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentScreen('rm-dashboard')}
+                className="p-2 hover:bg-gray-100 rounded-lg"
               >
-                <X size={24} />
+                <ArrowLeft className="w-5 h-5" />
               </button>
-            </div>
-
-            {/* Document Status */}
-            <div className="p-6">
-              <div className="mb-6">
-                <div className="flex items-center space-x-2 mb-4">
-                  <CheckCircle className="text-green-600" size={20} />
-                  <span className="text-green-600 font-medium">All documents uploaded successfully</span>
-                </div>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-green-800 text-sm">
-                    <strong>Status:</strong> Ready for verification • <strong>Upload Date:</strong> {new Date().toLocaleDateString()}
-                  </p>
-                </div>
+              <div className="bg-red-600 p-2 rounded-lg">
+                <Building2 className="w-6 h-6 text-white" />
               </div>
-
-              {/* Document Checklist */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-gray-900 mb-4">Document Checklist</h3>
-                {documentChecklist.map((doc, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="text-green-600" size={16} />
-                      <span className="text-gray-900">{doc.name}</span>
-                    </div>
-                    <span className="text-green-600 text-sm font-medium">Uploaded</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex space-x-4 mt-8">
-                <button
-                  onClick={handleApproveDocuments}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium"
-                >
-                  Approve Documents
-                </button>
-                <button
-                  onClick={closeVerifyPopup}
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-4 rounded-lg font-medium"
-                >
-                  Cancel
-                </button>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">Document Management</h1>
+                <p className="text-sm text-gray-500">
+                  {selectedApplication?.customerName} - {selectedApplication?.applicationId}
+                </p>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Document Upload Area */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Upload Documents</h3>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-lg font-medium text-gray-900 mb-2">Drop files here or click to upload</p>
+                <p className="text-sm text-gray-500 mb-4">Support for PDF, XLSX, MSG, HTML formats</p>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                  Choose Files
+                </button>
+              </div>
+            </div>
+
+            {/* Uploaded Documents */}
+            <div className="bg-white rounded-lg shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Uploaded Documents</h3>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {documents.map((doc) => (
+                  <div key={doc.id} className="px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-blue-100 p-2 rounded-lg">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{doc.name}</p>
+                        <p className="text-xs text-gray-500">{doc.type} • {doc.size} • {doc.uploadDate}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        doc.status === 'verified' ? 'bg-green-100 text-green-800' :
+                        doc.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {doc.status === 'verified' && <CheckCircle className="w-3 h-3 mr-1" />}
+                        {doc.status === 'pending' && <Clock className="w-3 h-3 mr-1" />}
+                        {doc.status === 'rejected' && <AlertCircle className="w-3 h-3 mr-1" />}
+                        {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+                      </span>
+                      <button className="text-blue-600 hover:text-blue-900">
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Document Checklist */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Document Checklist</h3>
+            <div className="space-y-3">
+              {[
+                'Bank Statements (Last 6 months)',
+                'Perfios Report',
+                'CIBIL Report - Consumer',
+                'CIBIL Report - Commercial',
+                'GST Filing Reports',
+                'Shareholding Certificates',
+                'Audit Reports',
+                'Email Communications'
+              ].map((item, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-sm text-gray-700">{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Verification Progress</span>
+                <span className="text-sm text-gray-500">8/8 Complete</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="bg-green-600 h-2 rounded-full w-full"></div>
+              </div>
+              <button className="w-full mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                Send to CM Queue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+
+  const renderCMDashboard = () => (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <div className="bg-red-600 p-2 rounded-lg">
+                <Building2 className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">ADITYA BIRLA CAPITAL</h1>
+                <p className="text-sm text-gray-500">Credit Manager Dashboard</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentScreen('rm-dashboard')}
+                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Switch to RM Dashboard
+              </button>
+              <div className="flex items-center space-x-2">
+                <User className="w-5 h-5 text-gray-400" />
+                <span className="text-sm text-gray-700">Sarah Wilson</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <FileText className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Ready for Review</p>
+                <p className="text-2xl font-semibold text-gray-900">{verifiedApplications.length}</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-green-100 p-3 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">CAMs Generated</p>
+                <p className="text-2xl font-semibold text-gray-900">12</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <div className="bg-yellow-100 p-3 rounded-lg">
+                <Clock className="w-6 h-6 text-yellow-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Pending Approval</p>
+                <p className="text-2xl font-semibold text-gray-900">3</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Applications Ready for CAM Generation */}
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">Applications Ready for CAM Generation</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Application ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Documents
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Submitted Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {verifiedApplications.map((application) => (
+                  <tr key={application.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{application.customerName}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{application.applicationId}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{application.amount}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        All Verified
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {application.submittedDate}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button 
+                        onClick={() => {
+                          setSelectedApplication(application);
+                          setCurrentScreen('cam-generation');
+                          setCAMProgress({
+                            stage: 0,
+                            percentage: 0,
+                            currentStep: 'Starting analysis...',
+                            isComplete: false
+                          });
+                        }}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        Generate CAM
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCAMGeneration = () => (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentScreen('cm-dashboard')}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="bg-red-600 p-2 rounded-lg">
+                <Building2 className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">ADITYA BIRLA CAPITAL</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          {/* Header Section */}
+          <div className="flex items-center space-x-4 mb-8">
+            <div className="bg-red-600 p-3 rounded-lg">
+              <span className="text-white font-bold text-lg">ABC</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Automated Credit Assessment Memo Solution</h2>
+              <p className="text-gray-600">Fully automated Agentic AI + Gen AI based CAM ++ Generation Solution</p>
+            </div>
+          </div>
+
+          {/* Progress Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-gray-900">{camProgress.percentage}% Complete</h3>
+              {!camProgress.isComplete && (
+                <div className="flex items-center space-x-2 text-blue-600">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">{camProgress.currentStep}</span>
+                </div>
+              )}
+              {camProgress.isComplete && (
+                <div className="flex items-center space-x-2 text-green-600">
+                  <CheckCircle className="w-4 h-4" />
+                  <span className="text-sm">CAM Generation Complete!</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
+              <div 
+                className="bg-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${camProgress.percentage}%` }}
+              ></div>
+            </div>
+
+            {/* Progress Steps */}
+            <div className="grid grid-cols-4 gap-4 mb-8">
+              {[
+                { step: 1, title: 'Reading Documents', range: '0-44%' },
+                { step: 2, title: 'Building Basic CAM', range: '44-58%' },
+                { step: 3, title: 'Financial Plotting', range: '58-87%' },
+                { step: 4, title: 'Generating CAM Report', range: '87-100%' }
+              ].map((item) => (
+                <div key={item.step} className="text-center">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                    camProgress.stage >= item.step 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-200 text-gray-500'
+                  }`}>
+                    {camProgress.stage > item.step ? (
+                      <CheckCircle className="w-6 h-6" />
+                    ) : (
+                      <span className="font-semibold">{item.step}</span>
+                    )}
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.range}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Document Types */}
+          <div className="bg-gray-50 rounded-lg p-6 mb-8">
+            <p className="text-center text-gray-600 mb-4">
+              Takes input from Bank Statements, Emails, Perfios Reports, Consumer and Commercial CIBIL, Share Holding Certificates, GST Filing Reports ... in PDF, XLSX, MSG, HTML Formats
+            </p>
+          </div>
+
+          {/* Processing Status */}
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-500">
+              Processing... Please wait
+            </div>
+            {camProgress.isComplete && (
+              <div className="space-x-4">
+                <button 
+                  onClick={() => setSecurityVerified(!securityVerified)}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    securityVerified 
+                      ? 'bg-green-100 text-green-800 border border-green-300' 
+                      : 'bg-yellow-100 text-yellow-800 border border-yellow-300'
+                  }`}
+                >
+                  {securityVerified ? 'Security Verified ✓' : 'Verify Security Details'}
+                </button>
+                <button 
+                  disabled={!securityVerified}
+                  className={`px-6 py-2 rounded-lg transition-colors ${
+                    securityVerified 
+                      ? 'bg-green-600 text-white hover:bg-green-700' 
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Approve
+                </button>
+                <button 
+                  disabled={!securityVerified}
+                  className={`px-6 py-2 rounded-lg transition-colors ${
+                    securityVerified 
+                      ? 'bg-yellow-600 text-white hover:bg-yellow-700' 
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Send Back
+                </button>
+                <button 
+                  disabled={!securityVerified}
+                  className={`px-6 py-2 rounded-lg transition-colors ${
+                    securityVerified 
+                      ? 'bg-red-600 text-white hover:bg-red-700' 
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Reject
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Main render logic
+  switch (currentScreen) {
+    case 'document-upload':
+      return renderDocumentUpload();
+    case 'cm-dashboard':
+      return renderCMDashboard();
+    case 'cam-generation':
+      return renderCAMGeneration();
+    default:
+      return renderRMDashboard();
+  }
+};
 
 export default App;
