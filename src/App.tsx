@@ -293,21 +293,45 @@ function App() {
         return (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded">
-              Security Details
+              Bank Summary
             </h3>
-            <div className="space-y-4">
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-semibold text-green-800 mb-2">Primary Security</h4>
-                <p className="text-green-700">First charge on all current assets of the company including stock, book debts, and other movable assets.</p>
-              </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-800 mb-2">Collateral Security</h4>
-                <p className="text-blue-700">Mortgage of industrial property located at Sector-80, Gautambudha Nagar, Uttar Pradesh valued at ₹45 Lakhs.</p>
-              </div>
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h4 className="font-semibold text-purple-800 mb-2">Personal Guarantee</h4>
-                <p className="text-purple-700">Personal guarantee of promoters - Mr. Ankit Babbar and Mrs. Ritu Babbar.</p>
-              </div>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 px-4 py-2 text-left">Bank Name</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Bank Account Number</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Account Holder Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">HDFC Bank</td>
+                    <td className="border border-gray-300 px-4 py-2">502000****5678</td>
+                    <td className="border border-gray-300 px-4 py-2">Vishnu Packwell Pvt Ltd</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">ICICI Bank</td>
+                    <td className="border border-gray-300 px-4 py-2">000405****345</td>
+                    <td className="border border-gray-300 px-4 py-2">Sharma Industries Pvt Ltd</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">State Bank of India</td>
+                    <td className="border border-gray-300 px-4 py-2">123456****901</td>
+                    <td className="border border-gray-300 px-4 py-2">Tech Solutions Inc</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">Axis Bank</td>
+                    <td className="border border-gray-300 px-4 py-2">917010****678</td>
+                    <td className="border border-gray-300 px-4 py-2">Manufacturing Co.</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">Punjab National Bank</td>
+                    <td className="border border-gray-300 px-4 py-2">245678****234</td>
+                    <td className="border border-gray-300 px-4 py-2">Export Business Ltd</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         );
@@ -318,7 +342,7 @@ function App() {
               Recommendation
             </h3>
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h4 className="font-semibold text-green-800 mb-4">Credit Recommendation: APPROVED</h4>
+              <h4 className="font-semibold text-green-800 mb-4">Credit Analysis: Risk Low</h4>
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -366,7 +390,7 @@ function App() {
       case 'risk':
         return "Risk assessment indicates manageable risk profile with adequate mitigation measures.";
       case 'security':
-        return "Security structure provides adequate coverage with multiple layers of protection.";
+        return "Bank account details show multiple banking relationships with major financial institutions.";
       case 'recommendation':
         return "Recommended for approval based on comprehensive analysis and risk assessment.";
       default:
@@ -449,7 +473,7 @@ function App() {
                       selectedSection === 'security' ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    🔒 Security Details
+                    🏦 Bank Summary
                   </div>
                   <div 
                     onClick={() => handleSectionClick('recommendation')}
