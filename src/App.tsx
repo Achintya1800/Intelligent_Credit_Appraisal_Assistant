@@ -298,7 +298,7 @@ function App() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
-                  <tr className="bg-gray-50">
+                  <tr className="bg-gray-900 text-white">
                     <th className="border border-gray-300 px-4 py-2 text-left">Bank Name</th>
                     <th className="border border-gray-300 px-4 py-2 text-left">Bank Account Number</th>
                     <th className="border border-gray-300 px-4 py-2 text-left">Account Holder Name</th>
@@ -318,6 +318,51 @@ function App() {
                 </tbody>
               </table>
             </div>
+
+            {/* Account Summary Table */}
+            <div className="mt-8">
+              <h4 className="text-lg font-semibold text-gray-900 bg-blue-50 p-3 rounded mb-4">
+                Account Summary
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-900 text-white">
+                      <th className="border border-gray-300 px-3 py-2 text-left text-sm">Bank Account Number</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Avg Monthly Credits</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Avg Monthly Debits</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Avg Monthly Balance</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Inward Bounces</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Outward Bounces</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Cheques Issued</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm">Cheques Presented</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="border border-gray-300 px-3 py-2 text-sm">502000****5678</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">Rs 15.23 Cr</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">Rs 11.97 Cr</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">Rs -1.45 Cr</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">0</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">0</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">4</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">26</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-3 py-2 text-sm">000405****345</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">Rs 16.00 Cr</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">Rs 15.00 Cr</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">Rs 0.67 Cr</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">0</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">2</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">13</td>
+                      <td className="border border-gray-300 px-3 py-2 text-center text-sm">110</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         );
       case 'recommendation':
@@ -331,8 +376,8 @@ function App() {
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="font-medium text-gray-700">Facility Type:</span>
-                    <p className="text-gray-900">Term Loan</p>
+                    <span className="font-medium text-gray-700">Loan Type:</span>
+                    <p className="text-gray-900">New Loan</p>
                   </div>
                   <div>
                     <span className="font-medium text-gray-700">Amount:</span>
@@ -500,9 +545,6 @@ function App() {
                     </span>
                     <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
                       Tenor: 60M
-                    </span>
-                    <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
-                      50% Complete
                     </span>
                   </div>
                   <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
