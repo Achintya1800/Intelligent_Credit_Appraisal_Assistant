@@ -101,8 +101,8 @@ function App() {
   // Get current status message based on progress
   const getCurrentStatusMessage = () => {
     if (camProgress < 22) return "Starting analysis...";
-    if (camProgress < 44) return "Documents collected successfully!";
-    if (camProgress < 58) return "Data fetched from FinAgg successfully!";
+    if (camProgress < 44) return "Data fetched from FinAgg successfully!";
+    if (camProgress < 58) return "Documents collected successfully!";
     if (camProgress < 87) return "Financial analysis completed!";
     if (camProgress < 100) return "Generating CAM... Please wait";
     return "Complete CAM generated successfully!";
@@ -760,7 +760,7 @@ function App() {
 
               {/* Process Steps */}
               <div className="grid grid-cols-4 gap-8 mb-12">
-                {['Reading Documents', 'Fetching From FinAgg', 'Financial Plotting', 'Generating CAM Report'].map((step, index) => (
+                {['Fetching From FinAgg', 'Reading Documents', 'Financial Plotting', 'Generating CAM Report'].map((step, index) => (
                   <div key={index} className="text-center transform transition-all duration-500 hover:scale-105">
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 ${
                       completedSteps.includes(index) 
