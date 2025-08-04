@@ -308,27 +308,12 @@ function App() {
                   <tr>
                     <td className="border border-gray-300 px-4 py-2">HDFC Bank</td>
                     <td className="border border-gray-300 px-4 py-2">502000****5678</td>
-                    <td className="border border-gray-300 px-4 py-2">Vishnu Packwell Pvt Ltd</td>
+                    <td className="border border-gray-300 px-4 py-2">Ritu Babbar</td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-2">ICICI Bank</td>
                     <td className="border border-gray-300 px-4 py-2">000405****345</td>
-                    <td className="border border-gray-300 px-4 py-2">Sharma Industries Pvt Ltd</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-300 px-4 py-2">State Bank of India</td>
-                    <td className="border border-gray-300 px-4 py-2">123456****901</td>
-                    <td className="border border-gray-300 px-4 py-2">Tech Solutions Inc</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-300 px-4 py-2">Axis Bank</td>
-                    <td className="border border-gray-300 px-4 py-2">917010****678</td>
-                    <td className="border border-gray-300 px-4 py-2">Manufacturing Co.</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-300 px-4 py-2">Punjab National Bank</td>
-                    <td className="border border-gray-300 px-4 py-2">245678****234</td>
-                    <td className="border border-gray-300 px-4 py-2">Export Business Ltd</td>
+                    <td className="border border-gray-300 px-4 py-2">Ankit Babbar</td>
                   </tr>
                 </tbody>
               </table>
