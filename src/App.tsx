@@ -437,18 +437,11 @@ function App() {
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
+                <img 
+                  src="/pnb_logo.png" 
+                  alt="Punjab National Bank" 
+                  className="h-12 object-contain"
+                />
               </div>
             </div>
           </div>
@@ -727,18 +720,11 @@ function App() {
           <div className="px-6 py-4">
             <div className="flex items-center">
               <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
+                <img 
+                  src="/pnb_logo.png" 
+                  alt="Punjab National Bank" 
+                  className="h-12 object-contain"
+                />
               </div>
             </div>
           </div>
@@ -869,18 +855,11 @@ function App() {
           <div className="px-6 py-4">
             <div className="flex items-center">
               <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-sm flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white/80 rounded-sm"></div>
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                </div>
-                <div className="text-red-600 font-bold text-lg">
-                  ADITYA BIRLA<br />
-                  <span className="text-red-700">CAPITAL</span>
-                </div>
+                <img 
+                  src="/pnb_logo.png" 
+                  alt="Punjab National Bank" 
+                  className="h-12 object-contain"
+                />
               </div>
             </div>
           </div>
